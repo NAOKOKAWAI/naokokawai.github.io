@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>阻塞队列(Blocking-Queue) | 谢朴欢</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="1. 简介阻塞队列顾名思义本质上是一个先进先出的队列，不过阻塞队列是一个并发的容器，是线程安全的，并且在提供常用的队列获取方法之外还提供了阻塞与超时方法。 2. 实现Queue接口现在来回顾一下队列接口Queue，如下所示： 1234567891011121314public interface Queue&amp;lt;E&amp;gt; extends Collection&amp;lt;E&amp;gt; &amp;#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阻塞队列(Blocking-Queue)">
+<meta property="og:url" content="https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/index.html">
+<meta property="og:site_name" content="谢朴欢">
+<meta property="og:description" content="1. 简介阻塞队列顾名思义本质上是一个先进先出的队列，不过阻塞队列是一个并发的容器，是线程安全的，并且在提供常用的队列获取方法之外还提供了阻塞与超时方法。 2. 实现Queue接口现在来回顾一下队列接口Queue，如下所示： 1234567891011121314public interface Queue&amp;lt;E&amp;gt; extends Collection&amp;lt;E&amp;gt; &amp;#123;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/4750376-868b67fbfb29da93.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-17T14:14:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="阻塞队列(Blocking-Queue)">
+<meta name="twitter:description" content="1. 简介阻塞队列顾名思义本质上是一个先进先出的队列，不过阻塞队列是一个并发的容器，是线程安全的，并且在提供常用的队列获取方法之外还提供了阻塞与超时方法。 2. 实现Queue接口现在来回顾一下队列接口Queue，如下所示： 1234567891011121314public interface Queue&amp;lt;E&amp;gt; extends Collection&amp;lt;E&amp;gt; &amp;#123;">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/4750376-868b67fbfb29da93.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="谢朴欢" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">谢朴欢</h5>
+          <a href="mailto:puhuanxie@outlook.com" title="puhuanxie@outlook.com" class="mail">puhuanxie@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">阻塞队列(Blocking-Queue)</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">阻塞队列(Blocking-Queue)</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-17T14:14:18.000Z" itemprop="datePublished" class="page-time">
+  2017-08-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 简介</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-实现"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 实现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Queue接口"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Queue接口</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#BlockingQueue接口"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">BlockingQueue接口</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#BlockingQueue的实现类"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">BlockingQueue的实现类</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-阻塞队列(Blocking-Queue)" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">阻塞队列(Blocking-Queue)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-17 22:14:18" datetime="2017-08-17T14:14:18.000Z" itemprop="datePublished">2017-08-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>阻塞队列顾名思义本质上是一个先进先出的队列，不过阻塞队列是一个并发的容器，是线程安全的，并且在提供常用的队列获取方法之外还提供了阻塞与超时方法。</p>
+<h1 id="2-实现"><a href="#2-实现" class="headerlink" title="2. 实现"></a>2. 实现</h1><h2 id="Queue接口"><a href="#Queue接口" class="headerlink" title="Queue接口"></a>Queue接口</h2><p>现在来回顾一下队列接口<code>Queue</code>，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Queue</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//添加元素，成功返回true，失败抛出异常java.lang.IllegalStateException: Queue full</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line">    <span class="comment">//添加元素，成功返回true，失败返回false</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span></span>;</span><br><span class="line">    <span class="comment">//移除队头元素，成功返回移除元素值，失败抛出异常java.util.NoSuchElementException</span></span><br><span class="line">    <span class="function">E <span class="title">remove</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//移除队头元素，成功返回移除元素值，失败返回null</span></span><br><span class="line">    <span class="function">E <span class="title">poll</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//获取队头元素，没有抛出异常java.util.NoSuchElementException</span></span><br><span class="line">    <span class="function">E <span class="title">element</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//获取队头元素，没有返回null</span></span><br><span class="line">    <span class="function">E <span class="title">peek</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="BlockingQueue接口"><a href="#BlockingQueue接口" class="headerlink" title="BlockingQueue接口"></a>BlockingQueue接口</h2><p>而<code>BlockingQueue</code>接口则在<code>Queue</code>的基础上增加了阻塞方法和超时方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BlockingQueue</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Queue</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span></span>;</span><br><span class="line">    <span class="comment">//添加元素，如队列已满则一直阻塞直到添加成功返回，该方法可在阻塞过程中响应中断</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">put</span><span class="params">(E e)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    <span class="comment">//添加元素，如队列已满则一直阻塞直到添加成功或超时返回，该方法可在阻塞过程中响应中断</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e, <span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    <span class="comment">//移除队头元素，如队列为空则一直阻塞直到队列不为空，该方法可在阻塞过程中响应中断</span></span><br><span class="line">    <span class="function">E <span class="title">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    <span class="comment">//移除队头元素，如队列为空则一直阻塞直到移除成功或超时返回，该方法可在阻塞过程中响应中断</span></span><br><span class="line">    <span class="function">E <span class="title">poll</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">remainingCapacity</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span></span>;</span><br><span class="line">    <span class="comment">//一次性从BlockingQueue获取所有可用的元素存储在集合c中</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">drainTo</span><span class="params">(Collection&lt;? <span class="keyword">super</span> E&gt; c)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">drainTo</span><span class="params">(Collection&lt;? <span class="keyword">super</span> E&gt; c, <span class="keyword">int</span> maxElements)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="BlockingQueue的实现类"><a href="#BlockingQueue的实现类" class="headerlink" title="BlockingQueue的实现类"></a>BlockingQueue的实现类</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/4750376-868b67fbfb29da93.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="BlockingQueue的实现" title="">
+                </div>
+                <div class="image-caption">BlockingQueue的实现</div>
+            </figure>
+<p>如上图所示，阻塞队列有7个实现：</p>
+<ul>
+<li><code>ArrayBlockingQueue</code> ：一个由数组实现的有界阻塞队列。</li>
+<li><code>LinkedBlockingQueue</code> ：一个由链表实现的有界阻塞队列。</li>
+<li><code>PriorityBlockingQueue</code> ：一个支持优先级排序的无界阻塞队列。</li>
+<li><code>DelayQueue</code>：一个由优先级队列实现的无界延时阻塞队列。</li>
+<li><code>SynchronousQueue</code>：同步队列，一个不存储元素的阻塞队列。</li>
+<li><code>LinkedTransferQueue</code>：一个由链表实现的无界阻塞队列，具有transfer相关方法。</li>
+<li><code>LinkedBlockingDeque</code>：一个由链表实现的双端阻塞队列。</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-17T14:14:18.000Z" itemprop="dateUpdated">2017-08-17 22:14:18</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://xiepuhuan.github.io">
+            <img src="/img/avatar.jpg" alt="谢朴欢">
+            谢朴欢
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/&title=《阻塞队列(Blocking-Queue)》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/&title=《阻塞队列(Blocking-Queue)》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《阻塞队列(Blocking-Queue)》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/08/17/地址解析协议(ARP)/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">地址解析协议(ARP)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/08/17/动态主机配置协议(DHCP)/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">动态主机配置协议(DHCP)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>谢朴欢 &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/&title=《阻塞队列(Blocking-Queue)》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/&title=《阻塞队列(Blocking-Queue)》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《阻塞队列(Blocking-Queue)》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiepuhuan.github.io/2017/08/17/阻塞队列(Blocking-Queue)/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

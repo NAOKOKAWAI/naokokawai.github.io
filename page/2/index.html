@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>谢朴欢</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="个人技术博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="谢朴欢">
+<meta property="og:url" content="https://xiepuhuan.github.io/page/2/index.html">
+<meta property="og:site_name" content="谢朴欢">
+<meta property="og:description" content="个人技术博客">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="谢朴欢">
+<meta name="twitter:description" content="个人技术博客">
+    
+        <link rel="alternate" type="application/atom+xml" title="谢朴欢" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">谢朴欢</h5>
+          <a href="mailto:puhuanxie@outlook.com" title="puhuanxie@outlook.com" class="mail">puhuanxie@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">谢朴欢</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header index-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">谢朴欢</h1>
+        <h5 class="subtitle">
+            
+                
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+<div class="container body-wrap">
+
+    <ul class="post-list">
+    
+        <li class="post-list-item fade">
+            <article id="post-Redis底层数据结构实现" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-08-22 22:52:13" datetime="2017-08-22T14:52:13.000Z" itemprop="datePublished">2017-08-22</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Redis/">Redis</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/08/22/Redis底层数据结构实现/">Redis底层数据结构实现</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介Redis是一个基于内存的非关系型的键值对数据库，因它基于内存的特性所以它的速度比传统的关系型数据库快，除此之外它还具有许多特性：
+
+支持事务
+支持AOF和RDB持久化
+支持多种数据数据结构
+流水线、发布\订阅功能
+主从复制
+内存回收
+
+本文讲的是Redis丰富的数据结构的实现原理
+实现五种基本类型Redis是一个键值对数据库，而键都是字符串（Redis内部实现的简单动态字符串）类...
+    
+
+        <a href="/2017/08/22/Redis底层数据结构实现/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-超文本传输协议(HTTP)" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-08-22 21:55:21" datetime="2017-08-22T13:55:21.000Z" itemprop="datePublished">2017-08-22</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/08/22/超文本传输协议(HTTP)/">超文本传输协议(HTTP)</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介HTTP是位于应用层的一个无状态的协议，默认HTTP的端口号为80，HTTPS的端口号为443。HTTP协议本身是不可靠的实现，要实现可靠地数据传输需要依靠底层的TCP协议。
+2. 实现HTTP的报文包括请求报文和响应报文两种
+请求报文请求报文是浏览器向服务器发出请求的报文，由第一行的请求行和后面的首部行组成，每一行都由回车换行(\r\n)结尾，当请求的方法是POST的时候，会在首...
+    
+
+        <a href="/2017/08/22/超文本传输协议(HTTP)/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-数据库基本概念" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-08-22 11:41:30" datetime="2017-08-22T03:41:30.000Z" itemprop="datePublished">2017-08-22</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/MySQL/">MySQL</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/08/22/数据库基本概念/">数据库基本概念</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 事务定义事务也是在存储引擎层实现的，可以这么说，事务本质就是一组SQL语句，但是这些SQL语句要么全部执行，要么都不执行。为了保证数据完整性，数据库系统必须维护下面四个性质（即ACID）：
+
+原子性：一个事务是不可分割的，要么事务中的SQL语句全部成功提交，要么全部回滚。
+一致性：数据库从一个一致的状态转移到另一个一致的状态，前后数据库的完整性没有被破坏。
+隔离性：多个事务并发访问时，...
+    
+
+        <a href="/2017/08/22/数据库基本概念/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-红黑树(Red-Black-Tree)" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-08-21 14:41:23" datetime="2017-08-21T06:41:23.000Z" itemprop="datePublished">2017-08-21</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/数据结构与算法/">数据结构与算法</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/08/21/红黑树(Red-Black-Tree)/">红黑树(Red-Black-Tree)</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介
+红黑树（Red Black Tree） 是一种自平衡二叉查找树，是二叉查找树的变种之一。它是在1972年由Rudolf Bayer发明的，当时被称为平衡二叉B树（symmetric binary B-trees）。后来，在1978年被 Leo J. Guibas 和 Robert Sedgewick修改为如今的“红黑树”。 2008年 Robert Sedgewick 对其进行了...
+    
+
+        <a href="/2017/08/21/红黑树(Red-Black-Tree)/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Java内存区域" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-08-20 05:46:40" datetime="2017-08-19T21:46:40.000Z" itemprop="datePublished">2017-08-20</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/08/20/Java内存区域/">Java内存区域</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        Java虚拟机(Java Virtual Machine)在执行Java程序时会把它所管理的内存划分为如下5个不同的运行时数据区域。
+1. 程序计数器(Program Counter)对于一个运行中的Java程序来说，每当启动一个线程时都会创建一个属于自己的程序计数器，各个线程之间的计数器互不影响。如果线程执行的是一个方法(非本地方法)，那么计数器记录的是正在执行的虚拟机字节码指令的地址；要...
+    
+
+        <a href="/2017/08/20/Java内存区域/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-ArrayList源码解析" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-08-19 14:36:18" datetime="2017-08-19T06:36:18.000Z" itemprop="datePublished">2017-08-19</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/08/19/ArrayList源码解析/">ArrayList源码解析</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介List是一种支持插入、删除、查找，元素可重复，可为null的数据结构，在JDK中有不同的实现类，其中ArrayList基于数组实现，支持随机访问，非线程安全，插入与删除时间复杂度为O(n)。
+2. 实现ArrayList内部是使用数组来实现的，所以可以做到随机访问时间为O(1)，如果不一开始设置好最终的大小，可能在不断添加元素的过程中多次扩容而导致效率问题。
+属性12345678...
+    
+
+        <a href="/2017/08/19/ArrayList源码解析/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-ConCurrentHashMap源码解析" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-08-19 07:33:59" datetime="2017-08-18T23:33:59.000Z" itemprop="datePublished">2017-08-19</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/08/19/ConCurrentHashMap源码解析/">ConCurrentHashMap源码解析</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介在之前写了HashMap源码解析介绍了HashMap这个数据结构，可惜它并不是线程安全的，在多线程情况下最好还是使用ConCurrentHashMap。在JDK8中它使用了CAS+synchronized实现来保证线程安全，而在JDK7中它使用了分段锁的实现方式来保证线程安全。下面我来剖析下它源码：
+2. 实现类继承结构12public class ConcurrentHashMa...
+    
+
+        <a href="/2017/08/19/ConCurrentHashMap源码解析/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-快速排序(Quick-Sort)" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-08-18 14:10:06" datetime="2017-08-18T06:10:06.000Z" itemprop="datePublished">2017-08-18</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/数据结构与算法/">数据结构与算法</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/08/18/快速排序(Quick-Sort)/">快速排序(Quick-Sort)</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介快速排序是由C.A.R.Hoare在1960年发明的。快速排序可能是应用最广泛的排序算法了，快速排序的实现简单，平均时间复杂度是O(NlgN)，而且它是原地排序。其实在快排的实现有一些坑，如果不仔细一点，快排也许就变成慢排了。接下来所讲的排序都是从小到大排序的，代码也是java描述的：
+与归并排序一样，快速排序也采用了分而治之的思想。
+
+在数组中选取一个元素作为主元
+将数组切分成左...
+    
+
+        <a href="/2017/08/18/快速排序(Quick-Sort)/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-地址解析协议(ARP)" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-08-17 23:42:03" datetime="2017-08-17T15:42:03.000Z" itemprop="datePublished">2017-08-17</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/08/17/地址解析协议(ARP)/">地址解析协议(ARP)</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介同一局域网中的一台主机要和另一台主机进行直接通信，必须要知道目标主机的MAC地址。如果知道其IP地址，则可以通过ARP（Address Resolution Protocol，地址解析协议）查询到其MAC地址。ARP仅用于IPv4，IPv6使用ICMPv6。
+2. ARP帧格式
+                
+                    
+              ...
+    
+
+        <a href="/2017/08/17/地址解析协议(ARP)/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-阻塞队列(Blocking-Queue)" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-08-17 22:14:18" datetime="2017-08-17T14:14:18.000Z" itemprop="datePublished">2017-08-17</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/08/17/阻塞队列(Blocking-Queue)/">阻塞队列(Blocking-Queue)</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介阻塞队列顾名思义本质上是一个先进先出的队列，不过阻塞队列是一个并发的容器，是线程安全的，并且在提供常用的队列获取方法之外还提供了阻塞与超时方法。
+2. 实现Queue接口现在来回顾一下队列接口Queue，如下所示：
+1234567891011121314public interface Queue&lt;E&gt; extends Collection&lt;E&gt; &#123...
+    
+
+        <a href="/2017/08/17/阻塞队列(Blocking-Queue)/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+    </ul>
+
+    
+<nav id="page-nav">
+    <div class="inner">
+    <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">下一页</a>
+    </div>
+</nav>
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>谢朴欢 &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/page/2/&title=谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/page/2/&title=谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/page/2/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=谢朴欢&url=https://xiepuhuan.github.io/page/2/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/page/2/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiepuhuan.github.io/page/2/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

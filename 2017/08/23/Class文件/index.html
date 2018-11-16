@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Class文件 | 谢朴欢</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="1. 简介Class文件是一种与平台无关的字节码文件，每一个Class文件都对应一个类或接口的定义信息，它包含了Java虚拟机指令集和符号表以及其他辅助信息。Class文件只与Java虚拟机有关，可以由不同的语言编写的源代码编译而来。 2. 结构Class文件是一组以8个字节为基础单位的字节流。在下表的数据项中：  u1、u2、u4、u8类型分别代表1个字节、2个字节、4个字节、8个字节的无符号数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Class文件">
+<meta property="og:url" content="https://xiepuhuan.github.io/2017/08/23/Class文件/index.html">
+<meta property="og:site_name" content="谢朴欢">
+<meta property="og:description" content="1. 简介Class文件是一种与平台无关的字节码文件，每一个Class文件都对应一个类或接口的定义信息，它包含了Java虚拟机指令集和符号表以及其他辅助信息。Class文件只与Java虚拟机有关，可以由不同的语言编写的源代码编译而来。 2. 结构Class文件是一组以8个字节为基础单位的字节流。在下表的数据项中：  u1、u2、u4、u8类型分别代表1个字节、2个字节、4个字节、8个字节的无符号数">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-08-22T19:12:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Class文件">
+<meta name="twitter:description" content="1. 简介Class文件是一种与平台无关的字节码文件，每一个Class文件都对应一个类或接口的定义信息，它包含了Java虚拟机指令集和符号表以及其他辅助信息。Class文件只与Java虚拟机有关，可以由不同的语言编写的源代码编译而来。 2. 结构Class文件是一组以8个字节为基础单位的字节流。在下表的数据项中：  u1、u2、u4、u8类型分别代表1个字节、2个字节、4个字节、8个字节的无符号数">
+    
+        <link rel="alternate" type="application/atom+xml" title="谢朴欢" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">谢朴欢</h5>
+          <a href="mailto:puhuanxie@outlook.com" title="puhuanxie@outlook.com" class="mail">puhuanxie@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Class文件</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Class文件</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-22T19:12:15.000Z" itemprop="datePublished" class="page-time">
+  2017-08-23
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 简介</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-结构"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 结构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数据项含义"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">数据项含义</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#magic（魔数）"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">magic（魔数）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#主版本号-amp-副版本号"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">主版本号 &amp; 副版本号</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#constant-pool-count（常量池计数器）"><span class="post-toc-number">2.1.3.</span> <span class="post-toc-text">constant_pool_count（常量池计数器）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#constant-pool（常量池）"><span class="post-toc-number">2.1.4.</span> <span class="post-toc-text">constant_pool（常量池）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#access-flags（访问标志）"><span class="post-toc-number">2.1.5.</span> <span class="post-toc-text">access_flags（访问标志）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#类索引（this-class）"><span class="post-toc-number">2.1.6.</span> <span class="post-toc-text">类索引（this_class）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#super-class（父类索引）"><span class="post-toc-number">2.1.7.</span> <span class="post-toc-text">super_class（父类索引）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#interfaces-count（接口计数器"><span class="post-toc-number">2.1.8.</span> <span class="post-toc-text">interfaces_count（接口计数器)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#interfaces（接口表）"><span class="post-toc-number">2.1.9.</span> <span class="post-toc-text">interfaces（接口表）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#fields-count（字段计数器）"><span class="post-toc-number">2.1.10.</span> <span class="post-toc-text">fields_count（字段计数器）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#fields（字段表）"><span class="post-toc-number">2.1.11.</span> <span class="post-toc-text">fields（字段表）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#methods-count（方法计数器）"><span class="post-toc-number">2.1.12.</span> <span class="post-toc-text">methods_count（方法计数器）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#methods（方法表）"><span class="post-toc-number">2.1.13.</span> <span class="post-toc-text">methods（方法表）</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Class文件" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Class文件</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-23 03:12:15" datetime="2017-08-22T19:12:15.000Z" itemprop="datePublished">2017-08-23</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>Class文件是一种与平台无关的字节码文件，每一个Class文件都对应一个类或接口的定义信息，它包含了Java虚拟机指令集和符号表以及其他辅助信息。Class文件只与Java虚拟机有关，可以由不同的语言编写的源代码编译而来。</p>
+<h1 id="2-结构"><a href="#2-结构" class="headerlink" title="2. 结构"></a>2. 结构</h1><p>Class文件是一组以8个字节为基础单位的字节流。在下表的数据项中：</p>
+<ul>
+<li>u1、u2、u4、u8类型分别代表1个字节、2个字节、4个字节、8个字节的无符号数</li>
+<li>_info结尾的类型是表类型，是由多个无符号数或其他表作为数据项的复合数据类型</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">u4</td>
+<td style="text-align:left">magic（魔数）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">minor_version（副版本号）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">major_version（主版本号）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">constant_pool_count（常量池计数器）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">cp_info</td>
+<td style="text-align:left">constant_pool（常量池）</td>
+<td style="text-align:left">constant_pool_count-1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">access_flags（访问标志）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">this_class（类索引）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">super_class（父类索引）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">interfaces_count（接口计数器）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">interfaces（接口表）</td>
+<td style="text-align:left">interfaces_count</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">fields_count（字段计数器）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">field_info</td>
+<td style="text-align:left">fields（字段表）</td>
+<td style="text-align:left">fields_count</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">methods_count（方法计数器）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">method_info</td>
+<td style="text-align:left">methods（方法表）</td>
+<td style="text-align:left">methods_count</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">attributes_count（属性计数器）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">attribute_info</td>
+<td style="text-align:left">attributes（属性表）</td>
+<td style="text-align:left">attributes_count</td>
+</tr>
+</tbody>
+</table>
+<h2 id="数据项含义"><a href="#数据项含义" class="headerlink" title="数据项含义"></a>数据项含义</h2><h3 id="magic（魔数）"><a href="#magic（魔数）" class="headerlink" title="magic（魔数）"></a>magic（魔数）</h3><p>每个Class文件头4个字节就是魔数，魔数的作用是确定这个文件是否为一个能被虚拟机所接受的Class文件。魔数的值固定为<strong>0xCAFEBABE</strong>。</p>
+<h3 id="主版本号-amp-副版本号"><a href="#主版本号-amp-副版本号" class="headerlink" title="主版本号 &amp; 副版本号"></a>主版本号 &amp; 副版本号</h3><p>主副版本号共同构成了Class文件的版本号，规定了这个版本号的Class文件只能由不低于这个版本号的虚拟机执行。</p>
+<h3 id="constant-pool-count（常量池计数器）"><a href="#constant-pool-count（常量池计数器）" class="headerlink" title="constant_pool_count（常量池计数器）"></a>constant_pool_count（常量池计数器）</h3><p>常量池计数器的值代表了常量池的容量。这里需要注意一点<strong>常量池的容量比常量池的常量数据项还要多1，因为常量池常量的索引是从1开始的</strong>。举个例子：常量池有8个常量，那么常量池的索引就是1-8，空出了0这个索引，那么常量池计数器表示为常量池容量就为9（即0-8）。</p>
+<h3 id="constant-pool（常量池）"><a href="#constant-pool（常量池）" class="headerlink" title="constant_pool（常量池）"></a>constant_pool（常量池）</h3><p>常量池中主要存放两大类常量：</p>
+<ol>
+<li>字面值<ul>
+<li>字符串</li>
+<li>声明为<code>final</code>的常量</li>
+</ul>
+</li>
+<li>符号引用<ul>
+<li>类和接口的全限定名</li>
+<li>字段的名称和描述符</li>
+<li>方法的名称和描述符</li>
+</ul>
+</li>
+</ol>
+<h3 id="access-flags（访问标志）"><a href="#access-flags（访问标志）" class="headerlink" title="access_flags（访问标志）"></a>access_flags（访问标志）</h3><p>访问标志用于表示某个类或者接口的访问权限及基础属性</p>
+<h3 id="类索引（this-class）"><a href="#类索引（this-class）" class="headerlink" title="类索引（this_class）"></a>类索引（this_class）</h3><p>类索引的是一个u2类型的数据项，它的值表示指向常量池中当前类或接口的索引，即一个CONSTANT_Class_info类型的符号引用。</p>
+<h3 id="super-class（父类索引）"><a href="#super-class（父类索引）" class="headerlink" title="super_class（父类索引）"></a>super_class（父类索引）</h3><p>父类索引的是一个u2类型的数据项，它的值表示指向常量池中父类的索引，即一个CONSTANT_Class_info类型的符号引用。</p>
+<h3 id="interfaces-count（接口计数器"><a href="#interfaces-count（接口计数器" class="headerlink" title="interfaces_count（接口计数器)"></a>interfaces_count（接口计数器)</h3><p>接口计数器表示该类或接口实现的接口数量</p>
+<h3 id="interfaces（接口表）"><a href="#interfaces（接口表）" class="headerlink" title="interfaces（接口表）"></a>interfaces（接口表）</h3><p>一个数据项类型为u2的集合，每一项表示指向常量池中接口的索引，即一个CONSTANT_Class_info类型的符号引用。</p>
+<h3 id="fields-count（字段计数器）"><a href="#fields-count（字段计数器）" class="headerlink" title="fields_count（字段计数器）"></a>fields_count（字段计数器）</h3><p>字段计数器表示类或接口声明的变量的数量，不包括方法中声明的变量。</p>
+<h3 id="fields（字段表）"><a href="#fields（字段表）" class="headerlink" title="fields（字段表）"></a>fields（字段表）</h3><p>一个数据项类型为field_info的集合，描述了各个字段，field_info的结构如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">access_flags（访问标记，修饰符）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">name_index（常量池中该字段简单名称的索引）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">descriptor_index（常量池中该字段描述符的索引）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">attributes_count</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">attribute_info</td>
+<td style="text-align:left">attributes</td>
+<td style="text-align:left">attributes_count</td>
+</tr>
+</tbody>
+</table>
+<h3 id="methods-count（方法计数器）"><a href="#methods-count（方法计数器）" class="headerlink" title="methods_count（方法计数器）"></a>methods_count（方法计数器）</h3><p>方法计数器表示类或接口中定义的方法数量</p>
+<h3 id="methods（方法表）"><a href="#methods（方法表）" class="headerlink" title="methods（方法表）"></a>methods（方法表）</h3><p>一个数据项类型为method_info的集合，描述了各个方法，field_info的结构如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">access_flags（访问标记，修饰符）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">name_index（常量池中该字段简单名称的索引）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">descriptor_index（常量池中该字段描述符的索引）</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">u2</td>
+<td style="text-align:left">attributes_count</td>
+<td style="text-align:left">1</td>
+</tr>
+<tr>
+<td style="text-align:left">attribute_info</td>
+<td style="text-align:left">attributes</td>
+<td style="text-align:left">attributes_count</td>
+</tr>
+</tbody>
+</table>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-22T19:12:15.000Z" itemprop="dateUpdated">2017-08-23 03:12:15</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://xiepuhuan.github.io">
+            <img src="/img/avatar.jpg" alt="谢朴欢">
+            谢朴欢
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/08/23/Class文件/&title=《Class文件》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/08/23/Class文件/&title=《Class文件》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/08/23/Class文件/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Class文件》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/08/23/Class文件/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/08/23/Class文件/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/08/23/ThreadPoolExecutor源码解析/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">ThreadPoolExecutor源码解析</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/08/22/Redis底层数据结构实现/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Redis底层数据结构实现</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>谢朴欢 &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/08/23/Class文件/&title=《Class文件》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/08/23/Class文件/&title=《Class文件》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/08/23/Class文件/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Class文件》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/08/23/Class文件/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/08/23/Class文件/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiepuhuan.github.io/2017/08/23/Class文件/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>地址解析协议(ARP) | 谢朴欢</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="1. 简介同一局域网中的一台主机要和另一台主机进行直接通信，必须要知道目标主机的MAC地址。如果知道其IP地址，则可以通过ARP（Address Resolution Protocol，地址解析协议）查询到其MAC地址。ARP仅用于IPv4，IPv6使用ICMPv6。 2. ARP帧格式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="地址解析协议(ARP)">
+<meta property="og:url" content="https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/index.html">
+<meta property="og:site_name" content="谢朴欢">
+<meta property="og:description" content="1. 简介同一局域网中的一台主机要和另一台主机进行直接通信，必须要知道目标主机的MAC地址。如果知道其IP地址，则可以通过ARP（Address Resolution Protocol，地址解析协议）查询到其MAC地址。ARP仅用于IPv4，IPv6使用ICMPv6。 2. ARP帧格式">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4750376-a0a209f6b4d7eb0c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4750376-2859d751afc71ccc.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4750376-041576217ae46060.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4750376-2049079723b5a5be.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-17T15:42:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="地址解析协议(ARP)">
+<meta name="twitter:description" content="1. 简介同一局域网中的一台主机要和另一台主机进行直接通信，必须要知道目标主机的MAC地址。如果知道其IP地址，则可以通过ARP（Address Resolution Protocol，地址解析协议）查询到其MAC地址。ARP仅用于IPv4，IPv6使用ICMPv6。 2. ARP帧格式">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/4750376-a0a209f6b4d7eb0c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="谢朴欢" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">谢朴欢</h5>
+          <a href="mailto:puhuanxie@outlook.com" title="puhuanxie@outlook.com" class="mail">puhuanxie@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">地址解析协议(ARP)</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">地址解析协议(ARP)</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-17T15:42:03.000Z" itemprop="datePublished" class="page-time">
+  2017-08-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 简介</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-ARP帧格式"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. ARP帧格式</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-原理"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 原理</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-地址解析协议(ARP)" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">地址解析协议(ARP)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-17 23:42:03" datetime="2017-08-17T15:42:03.000Z" itemprop="datePublished">2017-08-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>同一局域网中的一台主机要和另一台主机进行直接通信，必须要知道目标主机的MAC地址。如果知道其IP地址，则可以通过<strong>ARP（Address Resolution Protocol，地址解析协议）</strong>查询到其MAC地址。ARP仅用于<strong>IPv4</strong>，IPv6使用<strong>ICMPv6</strong>。</p>
+<h1 id="2-ARP帧格式"><a href="#2-ARP帧格式" class="headerlink" title="2. ARP帧格式"></a>2. ARP帧格式</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/4750376-a0a209f6b4d7eb0c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ARP帧格式" title="">
+                </div>
+                <div class="image-caption">ARP帧格式</div>
+            </figure>
+<p>上图是一个以太网封装上层ARP包后的以太网帧，其中的一些字段，如</p>
+<ul>
+<li>硬件类型：硬件地址类型，如以太网的值为0x0001</li>
+<li>协议类型：映射的协议的地址类型，如IPv4的值为0x0800</li>
+<li>硬件地址长度：硬件地址占多少个字节的长度，如以太网占6个字节，该值就为6</li>
+<li>协议地址长度：协议地址占多少个字节的长度，如IPv4占4个字节，该值就为4</li>
+<li>OP：指出这个ARP包是一个请求或响应包，请求为1，响应为2</li>
+</ul>
+<h1 id="3-原理"><a href="#3-原理" class="headerlink" title="3. 原理"></a>3. 原理</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/4750376-2859d751afc71ccc.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ARP抓包结果" title="">
+                </div>
+                <div class="image-caption">ARP抓包结果</div>
+            </figure>
+<p>以主机A(192.168.1.103)向所在子网的主机B(192.168.1.101)发送数据为例：</p>
+<ol>
+<li><p>当主机A发送数据时，主机A会在本机的ARP缓存表中寻找是否有主机B的IP地址。</p>
+<ul>
+<li>如果找到就知道主机B的MAC地址为<code>主机B的MAC地址</code>，直接把主机B的MAC地址写入帧首部发送数据。</li>
+</ul>
+</li>
+<li><p>如果在ARP缓存表中没有找到主机B的MAC地址，主机A就会在网络上广播一个ARP请求帧。如下图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/4750376-041576217ae46060.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ARP请求结果" title="">
+                </div>
+                <div class="image-caption">ARP请求结果</div>
+            </figure>
+</li>
+<li><p>同一子网上的主机都会收到这个帧，并且根据ARP包的内容更新自己的ARP缓存表。但只有主机B接收到这个帧时，单播一个目的IP地址为192.168.1.103的ARP响应帧，其他主机则丢弃这个请求帧。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/4750376-2049079723b5a5be.JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ARP响应结果" title="">
+                </div>
+                <div class="image-caption">ARP响应结果</div>
+            </figure>
+</li>
+</ol>
+<p>ARP缓存表采用老化机制，在一段时间内如果表中的某一行没有使用，就会被删除，这样可以大大减少ARP缓存表的长度，加快查询速度。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-17T15:42:03.000Z" itemprop="dateUpdated">2017-08-17 23:42:03</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://xiepuhuan.github.io">
+            <img src="/img/avatar.jpg" alt="谢朴欢">
+            谢朴欢
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/&title=《地址解析协议(ARP)》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/&title=《地址解析协议(ARP)》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《地址解析协议(ARP)》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/08/18/快速排序(Quick-Sort)/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">快速排序(Quick-Sort)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/08/17/阻塞队列(Blocking-Queue)/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">阻塞队列(Blocking-Queue)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>谢朴欢 &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/&title=《地址解析协议(ARP)》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/&title=《地址解析协议(ARP)》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《地址解析协议(ARP)》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiepuhuan.github.io/2017/08/17/地址解析协议(ARP)/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

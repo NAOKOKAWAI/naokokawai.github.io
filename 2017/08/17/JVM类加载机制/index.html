@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>JVM类加载机制 | 谢朴欢</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="1. 简介Java代码编译成字节码后，字节码需要通过虚拟机的加载才能运行 2. 类加载过程类加载的全过程分为5个阶段，其中验证、准备、解析属于连接阶段  加载 验证 准备 解析 初始化  加载加载是类加载过程的一个阶段，此阶段可以分为三步  通过一个类的全限定名（如java.lang.Object）来获取此类的二进制流 将这个字节流所代表的静态数据结构方法区运行时的数据结构 在内存中生成代表这个类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM类加载机制">
+<meta property="og:url" content="https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/index.html">
+<meta property="og:site_name" content="谢朴欢">
+<meta property="og:description" content="1. 简介Java代码编译成字节码后，字节码需要通过虚拟机的加载才能运行 2. 类加载过程类加载的全过程分为5个阶段，其中验证、准备、解析属于连接阶段  加载 验证 准备 解析 初始化  加载加载是类加载过程的一个阶段，此阶段可以分为三步  通过一个类的全限定名（如java.lang.Object）来获取此类的二进制流 将这个字节流所代表的静态数据结构方法区运行时的数据结构 在内存中生成代表这个类">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4750376-6727aa1662738dfc?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-17T12:11:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM类加载机制">
+<meta name="twitter:description" content="1. 简介Java代码编译成字节码后，字节码需要通过虚拟机的加载才能运行 2. 类加载过程类加载的全过程分为5个阶段，其中验证、准备、解析属于连接阶段  加载 验证 准备 解析 初始化  加载加载是类加载过程的一个阶段，此阶段可以分为三步  通过一个类的全限定名（如java.lang.Object）来获取此类的二进制流 将这个字节流所代表的静态数据结构方法区运行时的数据结构 在内存中生成代表这个类">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/4750376-6727aa1662738dfc?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="谢朴欢" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">谢朴欢</h5>
+          <a href="mailto:puhuanxie@outlook.com" title="puhuanxie@outlook.com" class="mail">puhuanxie@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JVM类加载机制</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JVM类加载机制</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-17T12:11:38.000Z" itemprop="datePublished" class="page-time">
+  2017-08-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 简介</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-类加载过程"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 类加载过程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#加载"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">加载</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#验证"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">验证</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#准备"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">准备</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解析"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">解析</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#初始化"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">初始化</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-类加载器"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 类加载器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#类加载器的分类"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">类加载器的分类</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#类加载器的层次关系-双亲委派模型"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">类加载器的层次关系(双亲委派模型)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#双亲委派模型"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">双亲委派模型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#工作方式"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">工作方式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#作用"><span class="post-toc-number">3.2.3.</span> <span class="post-toc-text">作用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#自定义类加载器"><span class="post-toc-number">3.2.4.</span> <span class="post-toc-text">自定义类加载器</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-JVM类加载机制" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JVM类加载机制</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-17 20:11:38" datetime="2017-08-17T12:11:38.000Z" itemprop="datePublished">2017-08-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>Java代码编译成字节码后，字节码需要通过虚拟机的加载才能运行</p>
+<h1 id="2-类加载过程"><a href="#2-类加载过程" class="headerlink" title="2. 类加载过程"></a>2. 类加载过程</h1><p>类加载的全过程分为5个阶段，其中<strong>验证、准备、解析</strong>属于连接阶段</p>
+<ol>
+<li>加载</li>
+<li>验证</li>
+<li>准备</li>
+<li>解析</li>
+<li>初始化</li>
+</ol>
+<h2 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h2><p>加载是类加载过程的一个阶段，此阶段可以分为三步</p>
+<ol>
+<li>通过一个类的全限定名（如java.lang.Object）来获取此类的二进制流</li>
+<li>将这个字节流所代表的静态数据结构方法区运行时的数据结构</li>
+<li>在内存中生成代表这个类的Class对象（Java虚拟机规范并没有明确规定这个对象在Java堆里，但是对于HotSpot虚拟机而言，Class对象存在于方法区中）</li>
+</ol>
+<p>这个阶段是由<strong>类加载器</strong>(ClassLoader)来完成</p>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>验证是连接阶段的第一步，目的是确保Class文件的字节流中包含的信息符合当前虚拟机的要求。包括四个方面的验证：</p>
+<ul>
+<li>文件格式验证</li>
+<li>元数据验证</li>
+<li>字节码验证</li>
+<li>符号引用验证</li>
+</ul>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>准备阶段时正式为类变量分配内存并设置类变量初始值的阶段，初始值一般是零值，不一般的情况就是类变量用 <code>final</code>修饰初始值是绑定的常量值。</p>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程。</p>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><ul>
+<li>初始化阶段是执行类构造器<clinit>()方法的过程，即静态语句块。</clinit></li>
+<li>虚拟机会保证父类的<clinit>()方法先执行。而如果初始化的是接口，并不需要先执行父接口的<clinit>()方法，只有在使用父接口定义的变量时才会执行。</clinit></clinit></li>
+<li>虚拟机会保证执行<clinit>()方法时会正确加锁同步。</clinit></li>
+</ul>
+<h1 id="3-类加载器"><a href="#3-类加载器" class="headerlink" title="3. 类加载器"></a>3. 类加载器</h1><p>类加载的加载阶段是由类加载器来完成的。即使是同一个类，由不同的类加载器来加载，两个类也是不相等的，体现在：</p>
+<ul>
+<li>Class对象的<code>equals()</code>方法</li>
+<li>Class对象的<code>isAssignableFrom</code>方法</li>
+<li>Class对象的<code>isInstance()</code>方法</li>
+<li>使用<code>instanceof</code>关键字判断对象所属的类</li>
+</ul>
+<h2 id="类加载器的分类"><a href="#类加载器的分类" class="headerlink" title="类加载器的分类"></a>类加载器的分类</h2><p>对于虚拟机来说只存在两种不同的类加载器：</p>
+<ol>
+<li>启动类加载器(Bootstrap ClassLoader)<ul>
+<li>使用C++实现，属于虚拟机自身的一部分。</li>
+<li>这个类负责加载&lt;JAVA_HOME&gt;\lib目录下，或者被-Xbootclasspath参数指定的路径，并且能够被虚拟机识别的类</li>
+<li>启动类加载器无法直接被Java程序引用</li>
+</ul>
+</li>
+<li>其他类加载器。使用Java实现，独立于虚拟机外部。并且继承与抽象类<code>java.lang.ClassLoader</code><ul>
+<li>扩展类加载器(Extension ClassLoader)<ul>
+<li>这个类加载器是由sun.misc.Launcher$ExtClassLoader实现</li>
+<li>负责加载&lt;JAVA_HOME&gt;\lib\ext目录中的，或者被java.ext.dirs系统变量指定的路径的所有类库</li>
+<li>扩展类加载器可以直接使用</li>
+</ul>
+</li>
+<li>应用程序类加载器(Application ClassLoader)<ul>
+<li>这个类加载器是由sun.misc.Launcher$AppClassLoader实现</li>
+<li>负责加载用户类路径(ClassPath)上的类库</li>
+<li>应用程序类加载器可以直接使用，同时这个类加载器也是ClassLoader类的<code>getSystemClassLoader()</code>静态方法的返回值</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="类加载器的层次关系-双亲委派模型"><a href="#类加载器的层次关系-双亲委派模型" class="headerlink" title="类加载器的层次关系(双亲委派模型)"></a>类加载器的层次关系(双亲委派模型)</h2><h3 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h3><p>下图是类加载器之间的层次关系，也称为双亲委派模型(Parents Delegation Model)。可以看出除了启动类加载器之外，其他类加载器都有自己的父加载器，但这里的层次关系是以<strong>组合</strong>来实现，而不是继承(extends)。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/4750376-6727aa1662738dfc?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="双亲委派模型" title="">
+                </div>
+                <div class="image-caption">双亲委派模型</div>
+            </figure></p>
+<h3 id="工作方式"><a href="#工作方式" class="headerlink" title="工作方式"></a>工作方式</h3><p>双亲委派模型的工作方式是：当一个类加载器收到加载类的请求时，它会先把这个加载请求委托给父类加载器，如果父类加载器不能完成加载（如在自己的搜索路径下找不到该类），这时再由自己来完成加载这个类。通过这个方法，加载请求会委托到启动加载器，如果启动类加载器完成不了再依次向下的类加载器加载。</p>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>双亲委派模型的作用是所有的加载请求都最先由顶层的类加载器去完成，这样可以保证加载出来的类是同一个，不会混乱。<br>打个比方，我们自己实现了两个类加载器，而这个两个类加载器都不是按照双亲委派模型去实现的，而是自己去对应目录下加载类。现在我们让两个类加载器加载去加载<code>java.lang.Object</code>类，加载出来的两个类必定是不同的（不同的类加载器加载出来的类是不同的）。</p>
+<h3 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">return</span> loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">        <span class="comment">// First, check if the class has already been loaded</span></span><br><span class="line">        Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    c = findBootstrapClassOrNull(name);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">                <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">// If still not found, then invoke findClass in order</span></span><br><span class="line">                <span class="comment">// to find the class.</span></span><br><span class="line">                <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">                c = findClass(name);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">                sun.misc.PerfCounter.getFindClasses().increment();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">            resolveClass(c);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码是抽象类<code>ClassLoader</code>的<code>loadClass</code>方法，通过类的全限定名来加载类，其中<code>loadClass(String name, boolean resolve)</code>方法实现了双亲委派法。具体步骤为：</p>
+<ol>
+<li>通过<code>findLoadedClass</code>方法检查当前类加载器是否加载过该类，加载过就直接返回该<code>Class</code>对象。</li>
+<li>如果没有加载过就将该加载请求委托给父加载器，如果没有父加载器则委托给启动类加载器。</li>
+<li>如果父加载器无法完成请求则自己使用<code>findClass</code>方法加载该类</li>
+</ol>
+<p>所以现在自定义类加载器想依照双亲委派模型去实现可以直接继承<code>ClassLoader</code>类并重写<code>findClass</code>方法。要是不想受照双亲委派模型约束可以直接重写<code>loadClass</code>方法。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-17T12:11:38.000Z" itemprop="dateUpdated">2017-08-17 20:11:38</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://xiepuhuan.github.io">
+            <img src="/img/avatar.jpg" alt="谢朴欢">
+            谢朴欢
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/&title=《JVM类加载机制》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/&title=《JVM类加载机制》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JVM类加载机制》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/08/17/动态主机配置协议(DHCP)/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">动态主机配置协议(DHCP)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/08/17/代理模式(Proxy-Pattern)/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">代理模式(Proxy-Pattern)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>谢朴欢 &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/&title=《JVM类加载机制》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/&title=《JVM类加载机制》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JVM类加载机制》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiepuhuan.github.io/2017/08/17/JVM类加载机制/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

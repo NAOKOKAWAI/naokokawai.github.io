@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>数据库基本概念 | 谢朴欢</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="1. 事务定义事务也是在存储引擎层实现的，可以这么说，事务本质就是一组SQL语句，但是这些SQL语句要么全部执行，要么都不执行。为了保证数据完整性，数据库系统必须维护下面四个性质（即ACID）：  原子性：一个事务是不可分割的，要么事务中的SQL语句全部成功提交，要么全部回滚。 一致性：数据库从一个一致的状态转移到另一个一致的状态，前后数据库的完整性没有被破坏。 隔离性：多个事务并发访问时，事务之">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库基本概念">
+<meta property="og:url" content="https://xiepuhuan.github.io/2017/08/22/数据库基本概念/index.html">
+<meta property="og:site_name" content="谢朴欢">
+<meta property="og:description" content="1. 事务定义事务也是在存储引擎层实现的，可以这么说，事务本质就是一组SQL语句，但是这些SQL语句要么全部执行，要么都不执行。为了保证数据完整性，数据库系统必须维护下面四个性质（即ACID）：  原子性：一个事务是不可分割的，要么事务中的SQL语句全部成功提交，要么全部回滚。 一致性：数据库从一个一致的状态转移到另一个一致的状态，前后数据库的完整性没有被破坏。 隔离性：多个事务并发访问时，事务之">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-08-22T03:41:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据库基本概念">
+<meta name="twitter:description" content="1. 事务定义事务也是在存储引擎层实现的，可以这么说，事务本质就是一组SQL语句，但是这些SQL语句要么全部执行，要么都不执行。为了保证数据完整性，数据库系统必须维护下面四个性质（即ACID）：  原子性：一个事务是不可分割的，要么事务中的SQL语句全部成功提交，要么全部回滚。 一致性：数据库从一个一致的状态转移到另一个一致的状态，前后数据库的完整性没有被破坏。 隔离性：多个事务并发访问时，事务之">
+    
+        <link rel="alternate" type="application/atom+xml" title="谢朴欢" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">谢朴欢</h5>
+          <a href="mailto:puhuanxie@outlook.com" title="puhuanxie@outlook.com" class="mail">puhuanxie@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">数据库基本概念</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">数据库基本概念</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-22T03:41:30.000Z" itemprop="datePublished" class="page-time">
+  2017-08-22
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/MySQL/">MySQL</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-事务"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 事务</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#SQL语句"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">SQL语句</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#隔离级别"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">隔离级别</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ANSI-SQL隔离级别"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">ANSI SQL隔离级别</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#幻读"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">幻读</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-范式"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 范式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第一范式-1NF"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">第一范式(1NF)</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第二范式-2NF"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">第二范式(2NF)</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第三范式-3NF"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">第三范式(3NF)</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-索引"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 索引</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#4-存储引擎"><span class="post-toc-number">4.</span> <span class="post-toc-text">4. 存储引擎</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#查看当前支持的存储引擎"><span class="post-toc-number">4.0.0.0.1.</span> <span class="post-toc-text">查看当前支持的存储引擎</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#更改表使用的存储引擎"><span class="post-toc-number">4.0.0.0.2.</span> <span class="post-toc-text">更改表使用的存储引擎</span></a></li></ol></li></ol><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#InnoDB"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">InnoDB</span></a></li>
+        </nav>
+    </aside>
+
+
+<article id="post-数据库基本概念" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">数据库基本概念</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-22 11:41:30" datetime="2017-08-22T03:41:30.000Z" itemprop="datePublished">2017-08-22</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/MySQL/">MySQL</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-事务"><a href="#1-事务" class="headerlink" title="1. 事务"></a>1. 事务</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>事务也是在存储引擎层实现的，可以这么说，事务本质就是一组SQL语句，但是这些SQL语句要么全部执行，要么都不执行。<br>为了保证数据完整性，数据库系统必须维护下面四个性质（即ACID）：</p>
+<ul>
+<li><strong>原子性：</strong>一个事务是不可分割的，要么事务中的SQL语句全部成功提交，要么全部回滚。</li>
+<li><strong>一致性：</strong>数据库从一个一致的状态转移到另一个一致的状态，前后数据库的完整性没有被破坏。</li>
+<li><strong>隔离性：</strong>多个事务并发访问时，事务之间是隔离的，一个事务不应该影响其它事务运行。数据库系统中有4种隔离级别。</li>
+<li><strong>持久性</strong>：事务提交后，所做的修改会一直保存在数据库中。</li>
+</ul>
+<h2 id="SQL语句"><a href="#SQL语句" class="headerlink" title="SQL语句"></a>SQL语句</h2><p>MySQL中开始一个事务并提交的过程如下：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">START</span> <span class="keyword">TRANSACTION</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">user</span>;</span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> <span class="keyword">user</span>;</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure></p>
+<p>如果想回滚来撤销开始事务之后的SQL语句可以使用<strong>ROLLBACK</strong>，不过不可以撤销<strong>SELECT、CREATE、DROP</strong>的操作。</p>
+<h2 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h2><p>事务的隔离性一共有<strong>4个隔离级别</strong>：</p>
+<ul>
+<li><p><strong>READ UNCOMMITTED（未提交读）：</strong>对事务的修改即使还未提交，对其他事务也是可见的，即可以读取未提交的数据，会出现脏读的情况。</p>
+</li>
+<li><p><strong>READ COMMITTED（提交读）：</strong>事务从开始到提交前所做的修改对其他事务是不可见的，但是执行同样的查询可能会出现不一样的结果，所以也叫<strong>不可重复读</strong>。</p>
+</li>
+<li><p><strong>REPEATABLE READ（可重复读）：</strong>可重复读是MySQL事务的默认隔离级别，它解决了脏读的问题，并且保证执行同样的查询的结果相同。</p>
+</li>
+<li><p><strong>SERIALIZABLE（可串行化）：</strong>强制事务串行执行，数据一致性好，但会导致大量锁竞争的问题，并发性弱。</p>
+</li>
+</ul>
+<h3 id="ANSI-SQL隔离级别"><a href="#ANSI-SQL隔离级别" class="headerlink" title="ANSI SQL隔离级别"></a>ANSI SQL隔离级别</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">隔离级别</th>
+<th style="text-align:center">脏读可能性</th>
+<th style="text-align:center">不可重复读可能性</th>
+<th style="text-align:center">幻读可能性</th>
+<th style="text-align:center">加锁读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">READ UNCOMMITTED（未提交读）</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">否</td>
+</tr>
+<tr>
+<td style="text-align:center">READ COMMITTED（提交读）</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">否</td>
+</tr>
+<tr>
+<td style="text-align:center">REPEATABLE READ（可重复读）</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">否</td>
+</tr>
+<tr>
+<td style="text-align:center">SERIALIZABLE（可串行化）</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">是</td>
+</tr>
+</tbody>
+</table>
+<h2 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h2><p>幻读是指当某个事物前后执行两条SQL查询语句查询记录，发现前后查询的记录不一致，这时可能其他事务在两次查询之间插入了新记录。MySQL的InnoDB存储引擎通过<strong>多版本并发控制(MVCC)</strong>解决了幻读问题。</p>
+<h1 id="2-范式"><a href="#2-范式" class="headerlink" title="2. 范式"></a>2. 范式</h1><p>范式是关系数据库理论的基础，也是在设计数据库结构过程中所要遵循的规则和指导方法。目前共有8种范式：1NF，2NF，3NF，BCNF，4NF，5NF，DKNF，6NF。通常所用到的基本是前三个范式：</p>
+<h2 id="第一范式-1NF"><a href="#第一范式-1NF" class="headerlink" title="第一范式(1NF)"></a>第一范式(1NF)</h2><p>第一范式指的是字段的原子性，即字段不可再分，但这取决于所面临的场景，如姓名这个字段其实可以分为姓氏和名字。</p>
+<h2 id="第二范式-2NF"><a href="#第二范式-2NF" class="headerlink" title="第二范式(2NF)"></a>第二范式(2NF)</h2><p>第二范式要求要有主键约束，即每一条记录都是唯一的，并且其他字段完全依赖于主键。</p>
+<h2 id="第三范式-3NF"><a href="#第三范式-3NF" class="headerlink" title="第三范式(3NF)"></a>第三范式(3NF)</h2><p>第三范式即消除传递依赖，非主键字段直接依赖于主键字段。例如在学生表中存在学号、姓名、年龄等字段，其中主键为学号，这时所有非主键字段都直接依赖于学号，这时如果将系编号、系别、系主任加到学生表中就出现传递依赖了，具体就是系别、系主任直接依赖与系编号，而系编号依赖于主键，这时应该通过拆分形成学生表和系别表从而消除传递依赖。</p>
+<h1 id="3-索引"><a href="#3-索引" class="headerlink" title="3. 索引"></a>3. 索引</h1><p>索引之于数据库犹如目录之于书籍，在MySQL中，索引在存储引擎层实现，索引可以用于快速查找到特定的记录。索引是存储某列或某几列字段的数据结构，这种数据结构有多种实现方式，如：B树、B+树、哈希表，在MySQL中的默认存储引擎<strong>InnoDB</strong>默认使用B+树来实现索引。</p>
+<h1 id="4-存储引擎"><a href="#4-存储引擎" class="headerlink" title="4. 存储引擎"></a>4. 存储引擎</h1><h5 id="查看当前支持的存储引擎"><a href="#查看当前支持的存储引擎" class="headerlink" title="查看当前支持的存储引擎"></a>查看当前支持的存储引擎</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">engines</span></span><br></pre></td></tr></table></figure>
+<h5 id="更改表使用的存储引擎"><a href="#更改表使用的存储引擎" class="headerlink" title="更改表使用的存储引擎"></a>更改表使用的存储引擎</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> my_table <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span></span><br></pre></td></tr></table></figure>
+<h2 id="InnoDB"><a href="#InnoDB" class="headerlink" title="InnoDB"></a>InnoDB</h2><p>MySQL默认的存储引擎就是InnoDB，它具有以下特性：</p>
+<ul>
+<li>事务</li>
+<li>行级锁</li>
+<li></li>
+</ul>
+<p>*</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-22T03:41:30.000Z" itemprop="dateUpdated">2017-08-22 11:41:30</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://xiepuhuan.github.io">
+            <img src="/img/avatar.jpg" alt="谢朴欢">
+            谢朴欢
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/&title=《数据库基本概念》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/&title=《数据库基本概念》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《数据库基本概念》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/08/22/超文本传输协议(HTTP)/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">超文本传输协议(HTTP)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/08/21/红黑树(Red-Black-Tree)/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">红黑树(Red-Black-Tree)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>谢朴欢 &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/&title=《数据库基本概念》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/&title=《数据库基本概念》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《数据库基本概念》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiepuhuan.github.io/2017/08/22/数据库基本概念/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
