@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Java内存区域 | 谢朴欢</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="Java虚拟机(Java Virtual Machine)在执行Java程序时会把它所管理的内存划分为如下5个不同的运行时数据区域。 1. 程序计数器(Program Counter)对于一个运行中的Java程序来说，每当启动一个线程时都会创建一个属于自己的程序计数器，各个线程之间的计数器互不影响。如果线程执行的是一个方法(非本地方法)，那么计数器记录的是正在执行的虚拟机字节码指令的地址；要是线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java内存区域">
+<meta property="og:url" content="https://xiepuhuan.github.io/2017/09/03/Java内存区域/index.html">
+<meta property="og:site_name" content="谢朴欢">
+<meta property="og:description" content="Java虚拟机(Java Virtual Machine)在执行Java程序时会把它所管理的内存划分为如下5个不同的运行时数据区域。 1. 程序计数器(Program Counter)对于一个运行中的Java程序来说，每当启动一个线程时都会创建一个属于自己的程序计数器，各个线程之间的计数器互不影响。如果线程执行的是一个方法(非本地方法)，那么计数器记录的是正在执行的虚拟机字节码指令的地址；要是线程">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-09-03T08:19:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java内存区域">
+<meta name="twitter:description" content="Java虚拟机(Java Virtual Machine)在执行Java程序时会把它所管理的内存划分为如下5个不同的运行时数据区域。 1. 程序计数器(Program Counter)对于一个运行中的Java程序来说，每当启动一个线程时都会创建一个属于自己的程序计数器，各个线程之间的计数器互不影响。如果线程执行的是一个方法(非本地方法)，那么计数器记录的是正在执行的虚拟机字节码指令的地址；要是线程">
+    
+        <link rel="alternate" type="application/atom+xml" title="谢朴欢" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">谢朴欢</h5>
+          <a href="mailto:puhuanxie@outlook.com" title="puhuanxie@outlook.com" class="mail">puhuanxie@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Java内存区域</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Java内存区域</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-09-03T08:19:40.000Z" itemprop="datePublished" class="page-time">
+  2017-09-03
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-程序计数器-Program-Counter"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 程序计数器(Program Counter)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-虚拟机栈-Virtual-Machine-Stack"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 虚拟机栈(Virtual Machine Stack)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-堆-Heap"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 堆(Heap)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-本地方法栈-Native-Method-Stack"><span class="post-toc-number">4.</span> <span class="post-toc-text">4. 本地方法栈(Native Method Stack)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-方法区-Method-Area"><span class="post-toc-number">5.</span> <span class="post-toc-text">5. 方法区(Method Area)</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Java内存区域" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Java内存区域</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-09-03 16:19:40" datetime="2017-09-03T08:19:40.000Z" itemprop="datePublished">2017-09-03</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>Java虚拟机(Java Virtual Machine)在执行Java程序时会把它所管理的内存划分为如下5个不同的运行时数据区域。</p>
+<h3 id="1-程序计数器-Program-Counter"><a href="#1-程序计数器-Program-Counter" class="headerlink" title="1. 程序计数器(Program Counter)"></a>1. 程序计数器(Program Counter)</h3><p>对于一个运行中的Java程序来说，每当启动一个线程时都会创建一个属于自己的程序计数器，各个线程之间的计数器互不影响。如果线程执行的是一个方法(非本地方法)，那么计数器记录的是正在执行的虚拟机字节码指令的地址；要是线程执行的是一个本地方法(Native Method)，那么计数器则为空(Undefined)。</p>
+<h3 id="2-虚拟机栈-Virtual-Machine-Stack"><a href="#2-虚拟机栈-Virtual-Machine-Stack" class="headerlink" title="2. 虚拟机栈(Virtual Machine Stack)"></a>2. 虚拟机栈(Virtual Machine Stack)</h3><p>与程序计数器一样，每当启动一个线程时都会创建一个属于自己的虚拟机栈，各个线程之间的虚拟机栈互不影响。线程执行时每调用一个方法，就会创建一个栈帧(Stack Frame)压到虚拟机栈中，当方法执行完正常返回或者抛出异常导致终止都会弹出栈帧。栈帧用于存储本地变量表，操作数栈，动态链接，方法出口等信息。本地变量表的大小在编译时就已经确定并存在于class文件中，在方法运行时大小不会再改变。</p>
+<h3 id="3-堆-Heap"><a href="#3-堆-Heap" class="headerlink" title="3. 堆(Heap)"></a>3. 堆(Heap)</h3><p>堆是所有线程共享的内存区域，几乎所有的对象实例和数组都在堆上分配。</p>
+<h3 id="4-本地方法栈-Native-Method-Stack"><a href="#4-本地方法栈-Native-Method-Stack" class="headerlink" title="4. 本地方法栈(Native Method Stack)"></a>4. 本地方法栈(Native Method Stack)</h3><p>本地方法栈是为执行本地方法服务的。</p>
+<h3 id="5-方法区-Method-Area"><a href="#5-方法区-Method-Area" class="headerlink" title="5. 方法区(Method Area)"></a>5. 方法区(Method Area)</h3><p>方法区是所有线程共享的内存区域，用于存储类信息，常量，静态变量，即时编译器编译后的代码等数据。其中方法区有一个常量池(Constant Pool)，在编译期间确定用于存放编译期生成的字面值常量和符号引用，这部分将在类加载后进入方法区的常量池存放。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-09-03T08:19:40.000Z" itemprop="dateUpdated">2017-09-03 16:19:40</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://xiepuhuan.github.io">
+            <img src="/img/avatar.jpg" alt="谢朴欢">
+            谢朴欢
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/09/03/Java内存区域/&title=《Java内存区域》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/09/03/Java内存区域/&title=《Java内存区域》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/09/03/Java内存区域/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Java内存区域》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/09/03/Java内存区域/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/09/03/Java内存区域/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/09/16/JVM垃圾回收机制(Garbage-Collection)/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JVM垃圾回收机制(Garbage-Collection)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/09/02/单例模式(Singleton-Pattern)/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">单例模式(Singleton-Pattern)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>谢朴欢 &copy; 2017 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/09/03/Java内存区域/&title=《Java内存区域》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/09/03/Java内存区域/&title=《Java内存区域》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/09/03/Java内存区域/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Java内存区域》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/09/03/Java内存区域/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/09/03/Java内存区域/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiepuhuan.github.io/2017/09/03/Java内存区域/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -151,13 +151,13 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
-            <article id="post-DDL" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-Redis底层数据结构实现" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
-        <time class="post-time" title="2017-08-25 16:11:27" datetime="2017-08-25T08:11:27.000Z" itemprop="datePublished">2017-08-25</time>
+        <time class="post-time" title="2018-11-15 20:39:13" datetime="2018-11-15T12:39:13.000Z" itemprop="datePublished">2018-11-15</time>
 
         
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/MySQL/">MySQL</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Redis/">Redis</a></li></ul>
 
 
 
@@ -168,7 +168,7 @@
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/08/25/DDL/">DDL</a>
+      <a class="post-title-link" href="/2018/11/15/Redis底层数据结构实现/">Redis底层数据结构实现</a>
     </h3>
   
 
@@ -178,26 +178,20 @@
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        
-DDL主要的命令有CREATE、ALTER、DROP等，DDL主要是用在定义或修改表的结构，数据类型，表之间的链接和约束等工作上，他们大多在建立表时使用。
-#一、数据库操作
-1. 查看数据库
+        1. 简介Redis是一个基于内存的非关系型的键值对数据库，因它基于内存的特性所以它的速度比传统的关系型数据库快，除此之外它还具有许多特性：
 
-show databases;
+支持事务
+支持AOF和RDB持久化
+支持多种数据数据结构
+流水线、发布\订阅功能
+主从复制
+内存回收
 
-2. 新建数据库
-
-CREATE DATABASE &lt;数据库名&gt;;
-
-3. 连接数据库
-
-use &lt;数据库名&gt;;
-
-4. 查看数据库中的表
-...
+本文讲的是Redis丰富的数据结构的实现原理
+实现五种基本类型Redis是一个键值对数据库，而键都是字符串（Redis内部实现的简单动态字符串）类...
     
 
-        <a href="/2017/08/25/DDL/" class="post-more waves-effect waves-button">
+        <a href="/2018/11/15/Redis底层数据结构实现/" class="post-more waves-effect waves-button">
             阅读全文…
         </a>
     </div>
@@ -207,13 +201,13 @@ use &lt;数据库名&gt;;
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-Internet控制报文协议(ICMP)" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-ThreadPoolExecutor源码解析" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
-        <time class="post-time" title="2017-08-25 12:50:23" datetime="2017-08-25T04:50:23.000Z" itemprop="datePublished">2017-08-25</time>
+        <time class="post-time" title="2018-05-03 16:35:02" datetime="2018-05-03T08:35:02.000Z" itemprop="datePublished">2018-05-03</time>
 
         
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
 
 
 
@@ -224,7 +218,7 @@ use &lt;数据库名&gt;;
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/08/25/Internet控制报文协议(ICMP)/">Internet控制报文协议(ICMP)</a>
+      <a class="post-title-link" href="/2018/05/03/ThreadPoolExecutor源码解析/">ThreadPoolExecutor源码解析</a>
     </h3>
   
 
@@ -234,12 +228,13 @@ use &lt;数据库名&gt;;
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        1. 简介IP协议本身没有为终端提供直接的方法来发现那些发往目的地址失败的IP数据包、相关的诊断信息等。为了解决这些问题，Internet控制报文协议(Internet Control Message Protocol，ICMP)出现了，ICMP被主机和路由器用来沟通网络层信息。ICMP既不是网络层协议，也不是传输层协议，而是介于两者之间。
-2. ICMP报文格式
-             ...
+        1. 简介在引入线程池之前，我们先来了解几个事情：
+
+线程的创建和销毁是有代价的，如线程创建需要时间和相关计算资源。如果在Web服务器上为每个来到的请求都创建一个线程，而大多数请求都是轻量级的处理过程。那么创建线程的代价与请求处理的代价相比就非常大了，导致影响整体性能。
+当线程数量达到能让CPU忙绿起来的时候，此时再创建线程，线程也基本处于闲置状态，这时候多出来的线程除了占用内存外，还可能因...
     
 
-        <a href="/2017/08/25/Internet控制报文协议(ICMP)/" class="post-more waves-effect waves-button">
+        <a href="/2018/05/03/ThreadPoolExecutor源码解析/" class="post-more waves-effect waves-button">
             阅读全文…
         </a>
     </div>
@@ -249,13 +244,13 @@ use &lt;数据库名&gt;;
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-AVL树" class="article-card article-type-post" itemprop="blogPost">
+            <article id="post-ReentrantLock源码解析" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
-        <time class="post-time" title="2017-08-25 03:37:32" datetime="2017-08-24T19:37:32.000Z" itemprop="datePublished">2017-08-25</time>
+        <time class="post-time" title="2018-05-01 21:54:43" datetime="2018-05-01T13:54:43.000Z" itemprop="datePublished">2018-05-01</time>
 
         
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/数据结构与算法/">数据结构与算法</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
 
 
 
@@ -266,7 +261,7 @@ use &lt;数据库名&gt;;
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/08/25/AVL树/">AVL树</a>
+      <a class="post-title-link" href="/2018/05/01/ReentrantLock源码解析/">ReentrantLock源码解析</a>
     </h3>
   
 
@@ -276,13 +271,257 @@ use &lt;数据库名&gt;;
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        1. 简介AVL树得名于它的发明者—前苏联的数学家G.M. Adelson-Velsky 和 E.M. Landis，他们在 1962 年的论文 “An algorithm for the organization of information” 中发表了它。
-2. 定义AVL树其实是一棵高度平衡的二叉搜索树，它是依靠平衡因子来维持树的高度。
-
-对于每个结点来说，它的左右子树高度差的绝对值（...
+        1. 简介
+ReentrantLock与synchronized关键字一样是可重入的独占锁，不过ReentrantLock提供比synchronized关键字更加灵活的获取锁和释放锁操作，并且支持等待多个条件，但ReentrantLock必须手动释放锁，否则很有可能造成死锁。在JDK6之后，synchronized加入了偏向锁、轻量级锁、自适应自旋、锁粗化、锁消除多种优化措施使它的性能提高了...
     
 
-        <a href="/2017/08/25/AVL树/" class="post-more waves-effect waves-button">
+        <a href="/2018/05/01/ReentrantLock源码解析/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-AbstractQueuedSynchronizer源码解析" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-04-26 22:58:59" datetime="2018-04-26T14:58:59.000Z" itemprop="datePublished">2018-04-26</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/04/26/AbstractQueuedSynchronizer源码解析/">AbstractQueuedSynchronizer源码解析</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介AbstractQueuedSynchronizer（抽象队列同步器）简称AQS，是一个用来构建同步组件的基础框架，JDK中java.util.concurrent这个包的许多同步组件都是基于AQS来构建的，如ReentrantLock，Semaphore，CountDownLatch，ReentrantReadWriteLock等。AQS运用了模板方法的设计模式，使我们只需重写A...
+    
+
+        <a href="/2018/04/26/AbstractQueuedSynchronizer源码解析/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-ConcurrentHashMap源码解析" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-04-25 15:09:59" datetime="2018-04-25T07:09:59.000Z" itemprop="datePublished">2018-04-25</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/04/25/ConcurrentHashMap源码解析/">ConcurrentHashMap源码解析</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介在之前写了HashMap源码解析介绍了HashMap这个数据结构，可惜它并不是线程安全的，在多线程情况下最好还是使用ConCurrentHashMap。在JDK8中它使用了CAS+synchronized实现来保证线程安全，而在JDK7中它使用了分段锁的实现方式来保证线程安全。下面我来剖析下它源码：
+2. 实现类继承结构12public class ConcurrentHashMa...
+    
+
+        <a href="/2018/04/25/ConcurrentHashMap源码解析/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-LinkedHashMap源码解析" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-04-17 12:55:53" datetime="2018-04-17T04:55:53.000Z" itemprop="datePublished">2018-04-17</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/04/17/LinkedHashMap源码解析/">LinkedHashMap源码解析</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介Map是一种关联容器，其中键是唯一的，每个键都有与之对应的值，我们可以通过键获取到唯一的值。JDK中，HashMap是其中的一种实现，只不过HashMap是无序的，不能记录插入顺序与访问顺序，而LinkedHashMap恰好能记录插入顺序或访问顺序，至于为什么能够实现，是因为它在内部维护了一个链表专门来记录插入顺序或访问顺序，接着我们来剖析其内部实现。
+2. 实现类继承关系从下面的...
+    
+
+        <a href="/2018/04/17/LinkedHashMap源码解析/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Vector源码解析" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-04-15 12:19:23" datetime="2018-04-15T04:19:23.000Z" itemprop="datePublished">2018-04-15</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/04/15/Vector源码解析/">Vector源码解析</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介Vector跟ArrayList一样是一个基于数组实现的List，只不过Vector是线程安全的，在可能出现线程安全性问题的方法，Vector都加上了关键字synchronized。与ArrayList一样，Vector查找元素的时间复杂度是O(1)，插入删除时间复杂度为O(n)。
+2. 实现属性12345678// 数组最大大小private static final int M...
+    
+
+        <a href="/2018/04/15/Vector源码解析/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-ArrayList源码解析" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-04-15 12:19:18" datetime="2018-04-15T04:19:18.000Z" itemprop="datePublished">2018-04-15</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/04/15/ArrayList源码解析/">ArrayList源码解析</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介List是一种支持插入、删除、查找，元素可重复，可为null的数据结构，在JDK中有不同的实现类，其中ArrayList基于数组实现，支持随机访问，非线程安全，插入与删除时间复杂度为O(n)。
+2. 实现ArrayList内部是使用数组来实现的，所以可以做到随机访问时间为O(1)，如果不一开始设置好最终的大小，可能在不断添加元素的过程中多次扩容而导致效率问题。
+属性12345678...
+    
+
+        <a href="/2018/04/15/ArrayList源码解析/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-LinkedList源码解析" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-04-15 12:17:53" datetime="2018-04-15T04:17:53.000Z" itemprop="datePublished">2018-04-15</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/04/15/LinkedList源码解析/">LinkedList源码解析</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        1. 简介LinkedList基于链表实现，非线程安全，其既实现了List接口又实现了Deque接口，所以既可以做为列表使用又可以做双端队列使用，队头队尾插入删除时间复杂度都为O(1)，查找效率为O(n)。
+2. 实现结点类型12345678910111213private static class Node&lt;E&gt; &#123;    E item;    // 下一个结点   ...
+    
+
+        <a href="/2018/04/15/LinkedList源码解析/" class="post-more waves-effect waves-button">
             阅读全文…
         </a>
     </div>
@@ -295,7 +534,7 @@ use &lt;数据库名&gt;;
             <article id="post-JVM参数" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
-        <time class="post-time" title="2017-08-24 14:17:19" datetime="2017-08-24T06:17:19.000Z" itemprop="datePublished">2017-08-24</time>
+        <time class="post-time" title="2018-02-20 22:19:19" datetime="2018-02-20T14:19:19.000Z" itemprop="datePublished">2018-02-20</time>
 
         
 	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li></ul>
@@ -309,7 +548,7 @@ use &lt;数据库名&gt;;
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/08/24/JVM参数/">JVM参数</a>
+      <a class="post-title-link" href="/2018/02/20/JVM参数/">JVM参数</a>
     </h3>
   
 
@@ -337,265 +576,7 @@ use &lt;数据库名&gt;;
 -Xm...
     
 
-        <a href="/2017/08/24/JVM参数/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-LinkedList源码解析" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-08-24 12:47:53" datetime="2017-08-24T04:47:53.000Z" itemprop="datePublished">2017-08-24</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/08/24/LinkedList源码解析/">LinkedList源码解析</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        1. 简介LinkedList基于链表实现，非线程安全，其既实现了List接口又实现了Deque接口，所以既可以做为列表使用又可以做双端队列使用，队头队尾插入删除时间复杂度都为O(1)，查找效率为O(n)。
-2. 实现结点类型12345678910111213private static class Node&lt;E&gt; &#123;    E item;    // 下一个结点   ...
-    
-
-        <a href="/2017/08/24/LinkedList源码解析/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-LinkedHashMap源码解析" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-08-24 11:21:53" datetime="2017-08-24T03:21:53.000Z" itemprop="datePublished">2017-08-24</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/08/24/LinkedHashMap源码解析/">LinkedHashMap源码解析</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        1. 简介Map是一种关联容器，其中键是唯一的，每个键都有与之对应的值，我们可以通过键获取到唯一的值。JDK中，HashMap是其中的一种实现，只不过HashMap是无序的，不能记录插入顺序与访问顺序，而LinkedHashMap恰好能记录插入顺序或访问顺序，至于为什么能够实现，是因为它在内部维护了一个链表专门来记录插入顺序或访问顺序，接着我们来剖析其内部实现。
-2. 实现类继承关系从下面的...
-    
-
-        <a href="/2017/08/24/LinkedHashMap源码解析/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-二叉搜索树(Binary-Search-Tree)" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-08-24 06:46:57" datetime="2017-08-23T22:46:57.000Z" itemprop="datePublished">2017-08-24</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/数据结构与算法/">数据结构与算法</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/08/24/二叉搜索树(Binary-Search-Tree)/">二叉搜索树(Binary-Search-Tree)</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        1. 定义二叉搜索树(BST)又叫二叉查找树，二叉排序树。二叉搜索树就是一棵二叉树，但是它又具有搜索树的特征：
-
-每个结点都比它的左结点大，比右结点小。
-每个结点的左右子树都是一课二叉搜索树。
-对一棵二叉搜索树进行中序遍历结果是从小到大排序的结果。
-
-2. 时间复杂度二叉搜索树结合了链表插入删除的灵活性和数组的查找的高效性。
-
-最好情况：最好情况下的二叉搜索树是一棵满二叉树，这时从根结点到所...
-    
-
-        <a href="/2017/08/24/二叉搜索树(Binary-Search-Tree)/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-HashMap源码解析" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-08-23 22:10:06" datetime="2017-08-23T14:10:06.000Z" itemprop="datePublished">2017-08-23</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/08/23/HashMap源码解析/">HashMap源码解析</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        1. 简介HashMapJava中的HashMap是符号表的一种哈希实现（采用拉链法），HashMap用来存储键值对，键和值都可以为Null，其中键是唯一的。在Java7中的实现是用数组+链表，在Java8中的实现是数组+链表+红黑树。因为引进了红黑树的，所以Java8中的HashMap的查找效率提高了不少。以下的讲解的源码也是Java8的源码。
-拉链法
-拉链法是一种处理哈希冲突的一种方法，...
-    
-
-        <a href="/2017/08/23/HashMap源码解析/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-ThreadPoolExecutor源码解析" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-08-23 08:10:56" datetime="2017-08-23T00:10:56.000Z" itemprop="datePublished">2017-08-23</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/JDK源码解析/">JDK源码解析</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/08/23/ThreadPoolExecutor源码解析/">ThreadPoolExecutor源码解析</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        1. 简介在引入线程池之前，我们先来了解几个事情：
-
-线程的创建和销毁是有代价的，如线程创建需要时间和相关计算资源。如果在Web服务器上为每个来到的请求都创建一个线程，而大多数请求都是轻量级的处理过程。那么创建线程的代价与请求处理的代价相比就非常大了，导致影响整体性能。
-当线程数量达到能让CPU忙绿起来的时候，此时再创建线程，线程也基本处于闲置状态，这时候多出来的线程除了占用内存外，还可能因...
-    
-
-        <a href="/2017/08/23/ThreadPoolExecutor源码解析/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-Class文件" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2017-08-23 03:12:15" datetime="2017-08-22T19:12:15.000Z" itemprop="datePublished">2017-08-23</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2017/08/23/Class文件/">Class文件</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        1. 简介Class文件是一种与平台无关的字节码文件，每一个Class文件都对应一个类或接口的定义信息，它包含了Java虚拟机指令集和符号表以及其他辅助信息。Class文件只与Java虚拟机有关，可以由不同的语言编写的源代码编译而来。
-2. 结构Class文件是一组以8个字节为基础单位的字节流。在下表的数据项中：
-
-u1、u2、u4、u8类型分别代表1个字节、2个字节、4个字节、8个字节的无...
-    
-
-        <a href="/2017/08/23/Class文件/" class="post-more waves-effect waves-button">
+        <a href="/2018/02/20/JVM参数/" class="post-more waves-effect waves-button">
             阅读全文…
         </a>
     </div>
@@ -637,7 +618,7 @@ u1、u2、u4、u8类型分别代表1个字节、2个字节、4个字节、8个�
         </p>
     </div>
     <div class="bottom">
-        <p><span>谢朴欢 &copy; 2017 - 2018</span>
+        <p><span>谢朴欢 &copy; 2017 - 2019</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>

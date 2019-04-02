@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>传输控制协议(TCP) | 谢朴欢</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="1. 简介TCP提供一种可靠的面向连接的全双工服务，位于传输层。 2. TCP报文段结构TCP报文段包括首部字段和数据字段，其中数据字段来自于应用层的数据，最大长度为MSS。 首部字段 源端口号(16 bit)：发送进程所占用的端口号 目的端口号(16 bit)：接收进程所占用的端口号 序号(32 bit)：传输方向上对数据字节流中的每一个字节编号，这个序号就是发送方要传输的报文段中数据流的第一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="传输控制协议(TCP)">
+<meta property="og:url" content="https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/index.html">
+<meta property="og:site_name" content="谢朴欢">
+<meta property="og:description" content="1. 简介TCP提供一种可靠的面向连接的全双工服务，位于传输层。 2. TCP报文段结构TCP报文段包括首部字段和数据字段，其中数据字段来自于应用层的数据，最大长度为MSS。 首部字段 源端口号(16 bit)：发送进程所占用的端口号 目的端口号(16 bit)：接收进程所占用的端口号 序号(32 bit)：传输方向上对数据字节流中的每一个字节编号，这个序号就是发送方要传输的报文段中数据流的第一个">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-02-10T10:14:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="传输控制协议(TCP)">
+<meta name="twitter:description" content="1. 简介TCP提供一种可靠的面向连接的全双工服务，位于传输层。 2. TCP报文段结构TCP报文段包括首部字段和数据字段，其中数据字段来自于应用层的数据，最大长度为MSS。 首部字段 源端口号(16 bit)：发送进程所占用的端口号 目的端口号(16 bit)：接收进程所占用的端口号 序号(32 bit)：传输方向上对数据字节流中的每一个字节编号，这个序号就是发送方要传输的报文段中数据流的第一个">
+    
+        <link rel="alternate" type="application/atom+xml" title="谢朴欢" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">谢朴欢</h5>
+          <a href="mailto:puhuanxie@outlook.com" title="puhuanxie@outlook.com" class="mail">puhuanxie@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">传输控制协议(TCP)</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">传输控制协议(TCP)</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-02-10T10:14:07.000Z" itemprop="datePublished" class="page-time">
+  2018-02-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 简介</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-TCP报文段结构"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. TCP报文段结构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#首部字段"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">首部字段</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-可靠性实现"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 可靠性实现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#连接建立（三次握手）"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">连接建立（三次握手）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#连接拆除（四次挥手）"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">连接拆除（四次挥手）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#流量控制"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">流量控制</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#拥塞控制"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">拥塞控制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#慢启动-Slow-Start"><span class="post-toc-number">3.4.1.</span> <span class="post-toc-text">慢启动(Slow Start)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#拥塞避免-Congestion-Avoidance"><span class="post-toc-number">3.4.2.</span> <span class="post-toc-text">拥塞避免(Congestion Avoidance)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#快速重传-Fast-Retransmit"><span class="post-toc-number">3.4.3.</span> <span class="post-toc-text">快速重传(Fast Retransmit)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#快速恢复-Fast-Recovery"><span class="post-toc-number">3.4.4.</span> <span class="post-toc-text">快速恢复(Fast Recovery)</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#4-最后"><span class="post-toc-number">4.</span> <span class="post-toc-text">4. 最后</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-传输控制协议(TCP)" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">传输控制协议(TCP)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-02-10 18:14:07" datetime="2018-02-10T10:14:07.000Z" itemprop="datePublished">2018-02-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/计算机网络/">计算机网络</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>TCP提供一种可靠的面向连接的全双工服务，位于传输层。</p>
+<h1 id="2-TCP报文段结构"><a href="#2-TCP报文段结构" class="headerlink" title="2. TCP报文段结构"></a>2. TCP报文段结构</h1><p>TCP报文段包括首部字段和数据字段，其中数据字段来自于应用层的数据，最大长度为MSS。</p>
+<h2 id="首部字段"><a href="#首部字段" class="headerlink" title="首部字段"></a>首部字段</h2><ul>
+<li>源端口号(16 bit)：发送进程所占用的端口号</li>
+<li>目的端口号(16 bit)：接收进程所占用的端口号</li>
+<li>序号(32 bit)：传输方向上对数据字节流中的每一个字节编号，这个序号就是发送方要传输的报文段中数据流的第一个字节的序号。</li>
+<li>确认号(32 bit)：接受方对接受到的报文段作出确认，确认号即是希望接受的下一个报文段数据字段中的第一个字节的编号。</li>
+<li>首部长(4 bit)：标识首部的大小以多少个4字节为单位，最大为15，即60字节。</li>
+<li>标志位(6 bit)：<ul>
+<li>URG：表示紧急指针是否有效。</li>
+<li>ACK：表示确认号是否有效。</li>
+<li>PSH：表示接收方应立即从缓冲读走数据，将数据传给上层。</li>
+<li>RST：表示要求对方重新建立连接。</li>
+<li>SYN：表示请求建立一个连接。</li>
+<li>FIN：表示关闭连接。</li>
+</ul>
+</li>
+<li>接受窗口(16 bit)：用于告知接收方自己还有多少缓存空间可用，因为TCP是全双工通信，双方都维持一个接受窗口。</li>
+<li>检验和(16 bit)：接收端用检验和检验报文段有无损坏。</li>
+<li>紧急数据指针(16 bit)：当URG位为1时，此紧急数据指针指向紧急数据的最后一个字节。</li>
+<li>选项字段：该字段是可选和变长的字段，可用于发送方与接收方协商最大报文段长度(MSS)。</li>
+</ul>
+<h1 id="3-可靠性实现"><a href="#3-可靠性实现" class="headerlink" title="3. 可靠性实现"></a>3. 可靠性实现</h1><h2 id="连接建立（三次握手）"><a href="#连接建立（三次握手）" class="headerlink" title="连接建立（三次握手）"></a>连接建立（三次握手）</h2><ul>
+<li>第一次：客户端<strong>发送SYN报文</strong>请求建立连接，然后进入SYN_SEND状态。</li>
+<li>第二次：服务器收到SYN报文，确定建立连接并<strong>发送SYN + ACK报文</strong>，然后进入SYN_RECV状态。</li>
+<li>第三次：客户端收到SYN + ACK报文，并对服务器的请求进行确认，<strong>发送ACK报文</strong>，然后进入ESTABLISH状态。</li>
+</ul>
+<blockquote>
+<p><strong>为什么要三次握手？</strong><br> 现在考虑两次握手的情况：&lt;&lt;计算机网络&gt;&gt;谢仁希版里面说<strong>防止已失效的连接请求报文段</strong>，意思是TCP第一次握手客户端发给服务器的SYN报文段出现延迟，然后客户端发现超时重传SYN报文段，这一次服务器收到并回应一个ACK报文，服务器端的连接建立，收到ACK报文的客户端也成功建立了连接。然而此时第一次发出的已失效的SYN报文此时到达了服务器，服务器以为发现是客户端的连接建立请求，同一建立起连接，然后发回一个ACK报文，客户端收到后不理睬，那服务器白白浪费TCP通信资源。但采用三次握手可以解决这个问题。</p>
+</blockquote>
+<h2 id="连接拆除（四次挥手）"><a href="#连接拆除（四次挥手）" class="headerlink" title="连接拆除（四次挥手）"></a>连接拆除（四次挥手）</h2><ul>
+<li>第一次：客户端<strong>发送FIN+ACK报文</strong>，进入FIN_WAIT_1状态，表示没有数据要发送了。</li>
+<li>第二次：<ul>
+<li>服务器收到了FIN+ACK报文，知道了断开请求，<strong>发送一个ACK报文</strong>，然后服务器进入CLOSE_WAIT状态，表示可能还有数据要发送。</li>
+<li>客户端收到了服务器的ACK报文进入了FIN_WAIT_2状态。</li>
+</ul>
+</li>
+<li>第三次：服务器向客户端<strong>发送FIN+ACK报文</strong>，然后进入LAST_ACK状态等待客户端的回应。</li>
+<li>第四次：客户端收到FIN+ACK报文，知道了断开连接的请求，接着客户端<strong>发送ACK报文</strong>然后进入TIME_WAIT状态，等待2MSL时间服务器没有在响应就最终进入CLOSE状态。</li>
+</ul>
+<blockquote>
+<p><strong>为什么要等待2MSL时间？</strong></p>
+<ul>
+<li>MSL是一个IP数据报在网络中的最大生存时间，如果客户端不等待2MSL而是直接进入CLOSED状态，服务端可能没有接收到最后一次ACK包会在超时重传FIN包，此时因为客户端已经进入CLOSED状态，所以服务端就不会收到ACK报文而是收到RST报文。所以等待2MSL时间是防止最后一次握手ACK报文没有到达对方而触发重传FIN准备的。</li>
+<li>让前一次使用这个端口的连接传输的数据到达接收方或消失，避免与新建立的连接数据混淆。</li>
+</ul>
+</blockquote>
+<h2 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h2><p>TCP是全双工的通信协议，在通信两端都维持有一个发送窗口和接受窗口，对于一个发送方和一个接收方来说，接收方的接收窗口大小受到接收缓存大小的限制，如果发送方发送窗口大小持续增大导致发送速率增加，而接受缓存过快填满而导致接收窗口大小减小，结果数据可能溢出。所以动态调整接收窗口就变得非常重要，可以通过TCP报文的窗口字段告知发送方本方还有多少缓存空间可用，这也就是流量控制。</p>
+<h2 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h2><p>拥塞控制是对于整体网络（包括路由器、交换机）出现拥塞的进行控制， 不同于流量控制的点对点控制，TCP的拥塞控制由4个核心算法组成。</p>
+<h3 id="慢启动-Slow-Start"><a href="#慢启动-Slow-Start" class="headerlink" title="慢启动(Slow Start)"></a>慢启动(Slow Start)</h3><p> 在发送方维持一个额外的<strong>拥塞窗口变量cwnd</strong>(congestion window)，这个拥塞窗口的大小取决于网络的拥塞程度，而流量控制的窗口取决于接收方的接受缓存，最终发送方的发送窗口大小应该为两者中的最小值。</p>
+<ul>
+<li>一开始，拥塞窗口的大小设置为一个MSS大小，即允许发送一个报文段</li>
+<li>发送完窗口所允许发送的报文段后，接收到一个对该报文段ACK报文段后，cwnd翻倍（cwnd = cwnd * 2）</li>
+<li>接着再发送完所有允许发送的2个报文段后，接收到两个ACK报文段后cwnd再次翻倍</li>
+<li>直到网络出现拥塞</li>
+</ul>
+<h3 id="拥塞避免-Congestion-Avoidance"><a href="#拥塞避免-Congestion-Avoidance" class="headerlink" title="拥塞避免(Congestion Avoidance)"></a>拥塞避免(Congestion Avoidance)</h3><p>上面说到慢启动的过程持续到网络出现拥塞，即出现超时还未收到ACK报文，此时就要进行拥塞避免：</p>
+<ul>
+<li>将慢启动阈值<code>ssthresh</code>设置为当前拥塞窗口cwnd的一半</li>
+<li>将cwnd的大小设置为1个MSS，重新执行慢启动算法</li>
+<li>当cwnd的大小达到<code>ssthresh</code>后的增量变成1，即只增加1个MSS大小</li>
+</ul>
+<h3 id="快速重传-Fast-Retransmit"><a href="#快速重传-Fast-Retransmit" class="headerlink" title="快速重传(Fast Retransmit)"></a>快速重传(Fast Retransmit)</h3><p>快速重传的目的是想让发送方在超时之前快速重传丢失的报文段。当发送方连续收到3个冗余的ACK就会执行快速重传。</p>
+<h3 id="快速恢复-Fast-Recovery"><a href="#快速恢复-Fast-Recovery" class="headerlink" title="快速恢复(Fast Recovery)"></a>快速恢复(Fast Recovery)</h3><p>连续收到3个冗余的ACK其实也表示网络出现拥塞导致丢包，这时执行与拥塞避免的<strong>类似操作</strong>：</p>
+<ul>
+<li>将慢启动阀值<code>ssthresh</code>设置为当前拥塞窗口cwnd的一半</li>
+<li>将cwnd的大小也设置为当前拥塞窗口cwnd的一半，执行拥塞避免算法</li>
+</ul>
+<p>第一步与拥塞避免的第一步相同，但cwnd不从1个MSS大小开始执行慢启动指数增长，而是减半执行拥塞避免线性增长，进行快速恢复。</p>
+<h1 id="4-最后"><a href="#4-最后" class="headerlink" title="4. 最后"></a>4. 最后</h1><p>现在总结下TCP的可靠性具体表现在：</p>
+<ul>
+<li>连接建立与拆除的可靠性实现</li>
+<li>确认与重传机制</li>
+<li>数据校验</li>
+<li>流量控制</li>
+<li>拥塞控制</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-02-10T10:14:07.000Z" itemprop="dateUpdated">2018-02-10 18:14:07</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://xiepuhuan.github.io">
+            <img src="/img/avatar.jpg" alt="谢朴欢">
+            谢朴欢
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/&title=《传输控制协议(TCP)》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/&title=《传输控制协议(TCP)》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《传输控制协议(TCP)》 — 谢朴欢&url=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/02/11/超文本传输协议(HTTP)/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">超文本传输协议(HTTP)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/01/25/代理模式(Proxy-Pattern)/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">代理模式(Proxy-Pattern)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>谢朴欢 &copy; 2017 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/&title=《传输控制协议(TCP)》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/&title=《传输控制协议(TCP)》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《传输控制协议(TCP)》 — 谢朴欢&url=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiepuhuan.github.io/2018/02/10/传输控制协议(TCP)/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

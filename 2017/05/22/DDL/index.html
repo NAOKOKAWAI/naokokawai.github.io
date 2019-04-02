@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>DDL | 谢朴欢</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="DDL主要的命令有CREATE、ALTER、DROP等，DDL主要是用在定义或修改表的结构，数据类型，表之间的链接和约束等工作上，他们大多在建立表时使用。 #一、数据库操作 1. 查看数据库  show databases;  2. 新建数据库  CREATE DATABASE &amp;lt;数据库名&amp;gt;;  3. 连接数据库  use &amp;lt;数据库名&amp;gt;;  4. 查看数据库中的表  sh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DDL">
+<meta property="og:url" content="https://xiepuhuan.github.io/2017/05/22/DDL/index.html">
+<meta property="og:site_name" content="谢朴欢">
+<meta property="og:description" content="DDL主要的命令有CREATE、ALTER、DROP等，DDL主要是用在定义或修改表的结构，数据类型，表之间的链接和约束等工作上，他们大多在建立表时使用。 #一、数据库操作 1. 查看数据库  show databases;  2. 新建数据库  CREATE DATABASE &amp;lt;数据库名&amp;gt;;  3. 连接数据库  use &amp;lt;数据库名&amp;gt;;  4. 查看数据库中的表  sh">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-05-22T08:11:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DDL">
+<meta name="twitter:description" content="DDL主要的命令有CREATE、ALTER、DROP等，DDL主要是用在定义或修改表的结构，数据类型，表之间的链接和约束等工作上，他们大多在建立表时使用。 #一、数据库操作 1. 查看数据库  show databases;  2. 新建数据库  CREATE DATABASE &amp;lt;数据库名&amp;gt;;  3. 连接数据库  use &amp;lt;数据库名&amp;gt;;  4. 查看数据库中的表  sh">
+    
+        <link rel="alternate" type="application/atom+xml" title="谢朴欢" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">谢朴欢</h5>
+          <a href="mailto:puhuanxie@outlook.com" title="puhuanxie@outlook.com" class="mail">puhuanxie@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/xiepuhuan" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">DDL</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">DDL</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-05-22T08:11:27.000Z" itemprop="datePublished" class="page-time">
+  2017-05-22
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/MySQL/">MySQL</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-DDL" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">DDL</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-05-22 16:11:27" datetime="2017-05-22T08:11:27.000Z" itemprop="datePublished">2017-05-22</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/MySQL/">MySQL</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <hr>
+<p>DDL主要的命令有CREATE、ALTER、DROP等，DDL主要是用在定义或修改表的结构，数据类型，表之间的链接和约束等工作上，他们大多在建立表时使用。</p>
+<p>#一、数据库操作</p>
+<p><strong>1. 查看数据库</strong></p>
+<blockquote>
+<p>show databases;</p>
+</blockquote>
+<p><strong>2. 新建数据库</strong></p>
+<blockquote>
+<p>CREATE DATABASE &lt;数据库名&gt;;</p>
+</blockquote>
+<p><strong>3. 连接数据库</strong></p>
+<blockquote>
+<p>use &lt;数据库名&gt;;</p>
+</blockquote>
+<p><strong>4. 查看数据库中的表</strong></p>
+<blockquote>
+<p>show tables;</p>
+</blockquote>
+<p><strong>5. 删除数据库</strong></p>
+<blockquote>
+<p>DROP DATABASE 数据库名;</p>
+</blockquote>
+<p>#二、数据表操作</p>
+<p>##1. 创建数据表</p>
+<p>####1.1创建表的语法格式</p>
+<blockquote>
+<p>CREATE TABLE 要创建的表名字</p>
+</blockquote>
+<blockquote>
+<p>(</p>
+</blockquote>
+<blockquote>
+<p>字段名1 数据类型(字段大小) [约束条件] ,</p>
+</blockquote>
+<blockquote>
+<p>字段名2 数据类型(字段大小) [约束条件] </p>
+</blockquote>
+<blockquote>
+<p>);</p>
+</blockquote>
+<p>####1.2主键约束(PRIMARY KEY CONSTRAINT)<br>主键能够唯一的标识表中的一行记录，因此主键不能有重复且不能为空。主键又分单字段主键和复合主键两种类型。</p>
+<p><strong>单字段主键</strong><br>可以在定义列时一起指定</p>
+<blockquote>
+<p>字段名 数据类型(字段大小)  PRIMARY KEY </p>
+</blockquote>
+<p>也可以在定义完所有列后指定</p>
+<blockquote>
+<p>[CONSTRAINT  &lt;约束名&gt;]   PRIMARY KEY 字段名</p>
+</blockquote>
+<p><strong>复合主键</strong></p>
+<blockquote>
+<p>[CONSTRAINT  &lt;约束名&gt;]  PRIMARY KEY(字段1,字段2)</p>
+</blockquote>
+<p>####1.3外键约束(FOREIGN KEY CONSTRAINT)</p>
+<p>外键用来在两个表的数据之间建立连接，对应的是参照完整性。外键必须是另一个表的主键，和主键一样它可以是一列或多列，不过与主键不一样的是：一个表可以有多个外键。主表名是外键所依赖的表的名字。</p>
+<blockquote>
+<p>[CONSTRAINT  &lt;约束名&gt;]  FOREIGN KEY(字段1, 字段2) REFERENCES 主表名(字段1, 字段2)</p>
+</blockquote>
+<p>####1.4非空约束(NOT NULL CONSTRAINT)</p>
+<p>非空约束是指该列的值不能为空，在插入一条记录时如果没有给定值，数据库系统就会报错。</p>
+<blockquote>
+<p>字段名 数据类型 NOT NULL</p>
+</blockquote>
+<p>####1.5唯一性约束(UNIQUE CONSTRAINT)</p>
+<p>唯一性约束是指该列的值不允许重复，允许一个空值。</p>
+<blockquote>
+<p>字段名 数据类型 UNIQUE</p>
+</blockquote>
+<p>####1.6默认约束(DEFAULT CONSTRAINT)<br>默认约束是指该列有默认值，在插入一条记录时，如果没有指定该字段的值，则自动为该字段赋默认值。</p>
+<blockquote>
+<p>字段名 数据类型 DEFAULT 默认值</p>
+</blockquote>
+<p>####1.7设置属性值自动增加</p>
+<p>这个功能的意思就是每插入一条新记录时自动生成字段的主键值。可以通过为主键设置AUTO_INCREMENT关键字来实现。它初始化为1，每添加一条记录，就会增加1。一个表只能为一个字段添加AUTO_INCREMENT，且该字段必须是主键或为主键的一部分。</p>
+<blockquote>
+<p>字段名 数据类型 AUTO_INCREMENT</p>
+</blockquote>
+<p>##2.查看数据表结构</p>
+<p>####2.1查看表基本结构</p>
+<p>DESCRIBE/DESC语句可以查看表的字段信息，包括：字段名，数据类型，约束条件等。</p>
+<blockquote>
+<p>DESCRIBE 表名<br>或<br>DESC 表名</p>
+</blockquote>
+<p>####2.2查看表详细结构</p>
+<p>SHOW CREATE TABLE语句可以查看创建表时的建表语句，存储引擎，字符编码等</p>
+<blockquote>
+<p>SHOW CREATE TABLE 表名\G</p>
+</blockquote>
+<p>\G可加可不加，加的话显示效果会更加直观。</p>
+<p>##3.修改数据表</p>
+<p>####3.1修改表名</p>
+<blockquote>
+<p>ALTER TABLE 原表名  RENAME [TO]  新表名;<br>RENAME TABLE  原表名  TO  新表名;</p>
+</blockquote>
+<p>####3.2修改字段数据类型</p>
+<blockquote>
+<p>ALTER TABLE 表名  MODIFY  字段名  数据类型;</p>
+</blockquote>
+<p>####3.3修改字段名</p>
+<blockquote>
+<p>ALTER TABLE  表名  CHANGE  原字段名  新字段名  新数据类型;</p>
+</blockquote>
+<p><strong>注：如果不想改变数据类型，可以设置跟原来一样，但不能为空。</strong></p>
+<p>####3.4添加新字段</p>
+<p>一个新字段需要字段名，数据类型，完整性约束。FIRST作用是将字段设置为表中第一个字段，AFTER是把新添加的字段放在指定的字段名后面</p>
+<blockquote>
+<p>ALTER TABLE 表名  ADD 新字段 数据类型 [约束条件]  [FIRST | AFTER  字段名];</p>
+</blockquote>
+<p>####3.5删除字段</p>
+<blockquote>
+<p>ALTER TABLE  表名  DROP  字段名;</p>
+</blockquote>
+<p>####3.6修改字段的位置</p>
+<blockquote>
+<p>ALTER TABLE  表名  MODIFY  字段 数据类型  FIRST;<br>ALTER TABLE  表名  MODIFY  字段 数据类型  AFTER 字段名;</p>
+</blockquote>
+<p>####3.7更改表的存储引擎</p>
+<p>我们可以为每张表选用不同的存储引擎。</p>
+<p>查看MySQL支持的存储引擎</p>
+<blockquote>
+<p>SHOW ENGINES;</p>
+</blockquote>
+<p>更改表的存储引擎</p>
+<blockquote>
+<p>ALTER TABLE 表名  ENGINE=新的存储引擎名</p>
+</blockquote>
+<p>####3.8删除表的外键约束</p>
+<p>外键约束一旦删除，就会解除主从表之间的关系。</p>
+<blockquote>
+<p>ALTER TABLE  表名  DROP FOREIGN KEY  外键约束名;</p>
+</blockquote>
+<p>####3.9修改表中某个值</p>
+<p>大多数时候我们需要做的修改是表中的某一个或几个数据，这就需要我们用下面这条命令达到精确的修改</p>
+<blockquote>
+<p>UPDATE  表名字  SET  列1=值1,列2=值2  WHERE  条件;</p>
+</blockquote>
+<p>####3.10删除一行记录</p>
+<blockquote>
+<p>DELETE  FROM  表名字  WHERE  条件;</p>
+</blockquote>
+<p>##4. 删除数据表</p>
+<p>####4.1删除没有被关联的表<br>在MySQL中，我们可以使用DROP TABLE语句一次删除一张或多张没有被其他表关联（主键被其他表设置为外键）的数据表。</p>
+<blockquote>
+<p>DROP TABLE [IF EXISTS]  表1,表2,……表n;</p>
+</blockquote>
+<p>####4.2删除被其他表关联的表</p>
+<p>当要删除的表被其他表所关联的话，直接删除会报错，但有两个办法：</p>
+<ol>
+<li><p>先删除与之关联的子表，再删除被关联的父表。</p>
+</li>
+<li><p>将与之关联的子表的外键约束解除，就可以只删除父表。</p>
+</li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-05-22T08:11:27.000Z" itemprop="dateUpdated">2017-05-22 16:11:27</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://xiepuhuan.github.io">
+            <img src="/img/avatar.jpg" alt="谢朴欢">
+            谢朴欢
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/05/22/DDL/&title=《DDL》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/05/22/DDL/&title=《DDL》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/05/22/DDL/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《DDL》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/05/22/DDL/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/05/22/DDL/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/05/30/快速排序(Quick-Sort)/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">快速排序(Quick-Sort)</h4>
+      </a>
+    </div>
+  
+
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>谢朴欢 &copy; 2017 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiepuhuan.github.io/2017/05/22/DDL/&title=《DDL》 — 谢朴欢&pic=https://xiepuhuan.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiepuhuan.github.io/2017/05/22/DDL/&title=《DDL》 — 谢朴欢&source=个人技术博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiepuhuan.github.io/2017/05/22/DDL/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《DDL》 — 谢朴欢&url=https://xiepuhuan.github.io/2017/05/22/DDL/&via=https://xiepuhuan.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiepuhuan.github.io/2017/05/22/DDL/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiepuhuan.github.io/2017/05/22/DDL/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
